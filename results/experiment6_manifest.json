@@ -1,0 +1,47 @@
+{
+  "n_total_rows": 25996,
+  "n_after_filter": 24695,
+  "n_dropped_missing_fields": 1301,
+  "n_ell": 2244,
+  "n_non_ell": 22451,
+  "seed": 42,
+  "n_bootstrap": 2000,
+  "n_folds": 5,
+  "held_out_frac": 0.2,
+  "features_used": [
+    "sentence_length_std",
+    "mean_sentence_length",
+    "mtld",
+    "transition_phrase_rate",
+    "paragraph_length_variance",
+    "punctuation_variety",
+    "contraction_rate",
+    "function_word_entropy"
+  ],
+  "dropped_raw_ttr_reason": "residual length confound per Experiment 2's partial-correlation gate",
+  "pre_registered_expectation": "incremental rho of ~0.2-0.3 over word-count alone",
+  "dev_n": 19756,
+  "held_out_n": 4939,
+  "delta_rho_dev_oof": {
+    "point": -0.07887833231140251,
+    "ci_low": -0.0855509463569006,
+    "ci_high": -0.072439475600475
+  },
+  "delta_r2_dev_oof": {
+    "point": 0.15990055562843886,
+    "ci_low": 0.11869678364112145,
+    "ci_high": 0.2213100110820914
+  },
+  "delta_rho_held_out": {
+    "point": -0.08196715948232947,
+    "ci_low": -0.0957294332307166,
+    "ci_high": -0.06776308783541837
+  },
+  "gbm_secondary_check": {
+    "r2": 0.6355383999275191,
+    "rho": 0.7939121348668912
+  },
+  "verdict": "NO",
+  "verdict_rule": "YES if delta_rho CI entirely above 0.2 (the document's pre-registered floor); NO if CI entirely below; else AMBIGUOUS",
+  "no_percentile_shown_to_students": "Per EXPERIMENT_6.md: PERSUADE is grades 6-12 argumentative essays averaging ~418 words; production input is 300-650 word college personal statements. No percentile, band, or score derived from this corpus goes in front of a student. Any output here is for internal conditioning only."
+}

@@ -1,0 +1,36 @@
+{
+  "domain": "abstracts",
+  "decoding": "greedy",
+  "repetition_penalty": "no",
+  "style_attacks": [
+    "none",
+    "paraphrase",
+    "synonym",
+    "perplexity_misspelling",
+    "alternative_spelling",
+    "article_deletion",
+    "insert_paragraphs"
+  ],
+  "obfuscation_attacks": [
+    "zero_width_space",
+    "homoglyph",
+    "whitespace",
+    "upper_lower",
+    "number"
+  ],
+  "max_rows_per_attack": 600,
+  "seed": 42,
+  "n_bootstrap": 1000,
+  "n_rows_collected": 7200,
+  "frozen_threshold": 0.9400731683995326,
+  "human_baseline_fpr": {
+    "value": 0.3691683569979716,
+    "ci_low": 0.3286004056795132,
+    "ci_high": 0.4117647058823529,
+    "n": 493
+  },
+  "domain_shift_limitation": "RAID has no essay domain; 'abstracts' (academic writing) is the closest register to PERSUADE's persuasive essays but is still a real domain shift from the corpus the frozen composite was calibrated on.",
+  "obfuscation_attack_caveat": "zero_width_space/homoglyph/whitespace/upper_lower/number attacks corrupt this project's regex-based word/sentence tokenization directly; a TPR drop there reflects tokenizer breakage, not 'text reads as more human', and is reported as a separate category rather than conflated with style attacks.",
+  "no_document_level_pairing": "Compares aggregate TPR per (model, attack) group rather than paired before/after scores per document; RAID's id linkage is per-attack-variant, not a simple join across all conditions.",
+  "single_model_limitation": "Within MAX_ROWS_PER_ATTACK=600 and the domain=abstracts/decoding=greedy/repetition_penalty=no filter, only 'llama-chat' (107 rows/attack) appeared among AI models before the cap was hit for every attack; other RAID models did not surface in this bounded stream. Findings below are single-model, not the full 11-model RAID coverage \u2014 would need a much higher row cap (more streaming time, still no monetary cost) to broaden model coverage."
+}

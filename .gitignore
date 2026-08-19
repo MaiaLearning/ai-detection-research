@@ -1,0 +1,33 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.pytest_cache/
+
+# Raw downloaded corpora under external non-commercial licenses (CC-BY-NC-SA
+# for PERSUADE/ELLIPSE, mixed/non-commercial-leaning for DAIGT-v2) — not ours
+# to redistribute. See README.md for download instructions + sha256 checksums
+# so replicators fetch byte-identical versions.
+data/persuade_2.0_human_scores_demo_id_github.csv
+data/train_v2_drcat_02.csv
+data/ellipse_corpus.csv
+# NOTE: data/bedrock_claude_essays.csv, data/openai_gpt56terra_essays.csv (we
+# generated these — no external restriction) and data/raid_abstracts_subset.csv
+# (RAID is MIT-licensed) are intentionally NOT excluded — they're committed for
+# exact reproducibility without repeat API spend.
+
+# Fitted model artifacts derived from CC-BY-NC-SA training data — licensing
+# status of derived model weights is unresolved, so these are excluded rather
+# than relicensed. Regenerate via scripts/experiment3_separation.py and
+# scripts/analyze_ell_genre_compounding.py (deterministic, seeded) after
+# downloading the raw corpora above.
+*.joblib
+
+# Editor/tool scratch state from research sessions, not part of the study
+.playwright-mcp/

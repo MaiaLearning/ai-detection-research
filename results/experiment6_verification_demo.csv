@@ -1,0 +1,8 @@
+essay_id,claim_type,feature,feature_value,percentile_in_corpus,claim_supported,essay_snippet
+6981DE476642,sentence_variety_high,sentence_length_std,8.378757024045845,0.4113788216238105,False,Driving cars is something we all have wanted to see. And now knowing that they might actually be inv
+A1274B901F55,sentence_variety_low,sentence_length_std,21.319005605327842,0.9476817169467504,False,"Dear, Principal
+
+I think students should have to do community service because if they want the point"
+871CE2BE3370,transition_density_high,transition_phrase_rate,0.6720430107526881,0.7661064992913545,True,"You have a big decision to make, the stress is starting to get to you, you ask your mom for advice b"
+05BE0B42E49E,lexical_repetition_high,mtld,81.60417866052582,0.7684146588378215,False,I strongly believe people should join and be a seagoing cowboy. If you like riding at sea and love a
+CB3BCC9A6D5C,paragraph_consistency_high,paragraph_length_variance,624.0,0.36282648309374366,False,"Limiting car usage is great way to start helping out our planet in many ways. It's called ""smart pla"

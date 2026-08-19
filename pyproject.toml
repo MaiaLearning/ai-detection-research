@@ -1,0 +1,22 @@
+[project]
+name = "ai-detection-calibration"
+version = "0.1.0"
+description = "Calibration study: do deterministic essay-texture features support an AI-detection or quality panel?"
+requires-python = ">=3.12"
+dependencies = [
+    "datasets>=5.0.1",
+    "joblib>=1.5.3",
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.2",
+    "pandas>=3.0.5",
+    "scikit-learn>=1.9.0",
+    "scipy>=1.18.0",
+]
+
+[dependency-groups]
+dev = [
+    "boto3>=1.43.71",
+    "kaggle>=2.2.4",
+    "openai>=3.0.0",
+    "pytest>=9.1.1",
+]

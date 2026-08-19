@@ -1,0 +1,58 @@
+{
+  "held_out_prompts": [
+    "Distance learning",
+    "Exploring Venus",
+    "Facial action coding system",
+    "Mandatory extracurricular activities"
+  ],
+  "n_train_human": 16880,
+  "n_heldout_human": 7815,
+  "n_train_ai": 12924,
+  "diagnostic_threshold": 0.9387033046594172,
+  "target_fpr": 0.01,
+  "seed": 42,
+  "n_bootstrap": 2000,
+  "cells": [
+    {
+      "cell": "A_baseline_nonELL_trainprompts",
+      "n": 16262,
+      "fpr": 0.009777395154347559,
+      "fpr_ci_low": 0.008240068872217439,
+      "fpr_ci_high": 0.0113162587627598
+    },
+    {
+      "cell": "B_ELL_trainprompts",
+      "n": 618,
+      "fpr": 0.016181229773462782,
+      "fpr_ci_low": 0.006472491909385114,
+      "fpr_ci_high": 0.02750809061488673
+    },
+    {
+      "cell": "C_nonELL_heldoutprompts",
+      "n": 6189,
+      "fpr": 0.008402003554693812,
+      "fpr_ci_low": 0.006139925674583939,
+      "fpr_ci_high": 0.010664081434803683
+    },
+    {
+      "cell": "D_ELL_heldoutprompts",
+      "n": 1626,
+      "fpr": 0.014760147601476014,
+      "fpr_ci_low": 0.00922509225092251,
+      "fpr_ci_high": 0.020910209102091022
+    }
+  ],
+  "compounding_gap_logodds": {
+    "point": 0.0596264087016678,
+    "ci_low": -0.7127628963108306,
+    "ci_high": 1.0535880071636892
+  },
+  "external_reference_ellipse_same_task_fpr": 0.024123,
+  "external_reference_ellipse_different_task_fpr": 0.037343,
+  "external_reference_raid_abstracts_fpr": {
+    "point": 0.3692,
+    "ci_low": 0.3286,
+    "ci_high": 0.4118
+  },
+  "note": "This diagnostic model is separate from the main Experiment 3 frozen composite (results/experiment3_frozen_composite.joblib) used everywhere else in this project -- it exists solely to test ELL x genre-shift compounding via a clean within-PERSUADE held-out-prompt design, and should not be reused for other reported figures."
+}

@@ -1,0 +1,22 @@
+level,prompt_name,n_offered,n_accepted,discard_rate,hit_target
+L0,Summer projects,12,2,0.8333333333333334,False
+L0,Mandatory extracurricular activities,12,1,0.9166666666666666,False
+L0,Community service,12,0,1.0,False
+L0,Grades for extracurricular activities,12,0,1.0,False
+L0,Cell phones at school,12,0,1.0,False
+L0,Distance learning,12,1,0.9166666666666666,False
+L0,Seeking multiple opinions,12,0,1.0,False
+L1,Summer projects,12,2,0.8333333333333334,False
+L1,Mandatory extracurricular activities,12,2,0.8333333333333334,False
+L1,Community service,12,0,1.0,False
+L1,Grades for extracurricular activities,12,1,0.9166666666666666,False
+L1,Cell phones at school,12,0,1.0,False
+L1,Distance learning,12,2,0.8333333333333334,False
+L1,Seeking multiple opinions,12,2,0.8333333333333334,False
+L3,Summer projects,6,3,0.5,True
+L3,Mandatory extracurricular activities,12,2,0.8333333333333334,False
+L3,Community service,12,2,0.8333333333333334,False
+L3,Grades for extracurricular activities,12,1,0.9166666666666666,False
+L3,Cell phones at school,12,0,1.0,False
+L3,Distance learning,12,2,0.8333333333333334,False
+L3,Seeking multiple opinions,12,3,0.75,True

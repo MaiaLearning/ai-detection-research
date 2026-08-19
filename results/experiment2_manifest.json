@@ -1,0 +1,41 @@
+{
+  "n_total_rows": 25996,
+  "n_after_filter": 24695,
+  "n_dropped_missing_fields": 1301,
+  "n_ell": 2244,
+  "n_non_ell": 22451,
+  "corpus_path": "data/persuade_2.0_human_scores_demo_id_github.csv",
+  "corpus_sha256": "a28abb40eae9075191ae58627132172a576bc21fed7595c76d8318d927b5024d",
+  "seed": 42,
+  "n_bootstrap": 1000,
+  "sample_definition": "Full cleaned PERSUADE analytic sample (same filter as Experiment 1: valid ell_status/grade_level/holistic_essay_score/word_count/prompt_name), NOT restricted to Experiment 1's ELL-matching subsample. Word count is controlled via partial Spearman correlation instead, since it is the confound this gate specifically calls out.",
+  "quality_fail_rho_threshold": -0.1,
+  "rho_word_count_vs_holistic_score": 0.7573372325921258,
+  "features": [
+    "sentence_length_std",
+    "mean_sentence_length",
+    "type_token_ratio",
+    "mtld",
+    "transition_phrase_rate",
+    "paragraph_length_variance",
+    "punctuation_variety",
+    "contraction_rate",
+    "function_word_entropy"
+  ],
+  "full_feature_set_gate_verdict": "FAIL",
+  "features_failing_full_set_gate": [
+    "sentence_length_std",
+    "type_token_ratio"
+  ],
+  "reduced_feature_set": [
+    "mean_sentence_length",
+    "mtld",
+    "transition_phrase_rate",
+    "paragraph_length_variance",
+    "punctuation_variety",
+    "contraction_rate",
+    "function_word_entropy"
+  ],
+  "reduced_feature_set_combined_verdict": "PASS",
+  "note": "RESEARCH_PLAN.md's literal decision rule is 'Fail 1 or 2 -> no scoring panel. Report and stop.' sentence_length_std and type_token_ratio fail outright on the full 9-feature set. Per user direction, we additionally checked whether a combined model over the remaining 7 features is clean as a group before deciding whether to proceed to Experiments 3/4."
+}

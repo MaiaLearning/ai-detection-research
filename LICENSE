@@ -1,0 +1,41 @@
+This repository contains two categories of content under different licenses:
+
+1. SOURCE CODE (src/, scripts/, tests/, pyproject.toml, uv.lock, and any other
+   .py files) is licensed under the MIT License, reproduced below.
+
+2. WRITTEN CONTENT — the white paper, README.md, CLAUDE.md, RESEARCH_PLAN.md,
+   the EXPERIMENT_*.md design documents, and the contents of results/ (CSVs,
+   plots, JSON manifests) — is licensed under Creative Commons Attribution
+   4.0 International (CC BY 4.0). See LICENSE-CONTENT.md for the full notice.
+
+Data files under data/ are NOT covered by either license above. Raw
+third-party corpora are excluded from this repository entirely (see
+README.md for download instructions and checksums); the essay sets this
+project generated itself (data/bedrock_claude_essays.csv,
+data/openai_gpt56terra_essays.csv) and the derived RAID subset
+(data/raid_abstracts_subset.csv, RAID itself is MIT-licensed) are included
+for reproducibility and fall under the same MIT terms as the code.
+
+------------------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2026 MaiaLearning
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

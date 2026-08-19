@@ -1,0 +1,39 @@
+{
+  "n_total_rows": 25996,
+  "n_after_filter": 24695,
+  "n_dropped_missing_fields": 1301,
+  "n_ell": 2244,
+  "n_non_ell": 22451,
+  "model_id": "us.anthropic.claude-sonnet-5",
+  "temperature": 1.0,
+  "max_tokens": 1600,
+  "seed": 42,
+  "n_per_prompt_target": 3,
+  "n_quantile_bins": 4,
+  "max_oversample_factor": 4,
+  "pre_registered_prediction": "TPR declines monotonically from L0 to L1 to L3. L0 and L1 are expected to be close to each other (both low-effort prompting, consistent with the free-check and L2-sourcing finding that DAIGT's real generation prompts show no evidence of deliberate student-voice engineering beyond L1-level). The real drop is expected at L3 (paraphrase-for-evasion, sourced from Lu et al. 2024 Table 11).",
+  "pre_registered_prediction_held": false,
+  "usable_independent_prompts": [
+    "Cell phones at school",
+    "Community service",
+    "Distance learning",
+    "Grades for extracurricular activities",
+    "Mandatory extracurricular activities",
+    "Seeking multiple opinions",
+    "Summer projects"
+  ],
+  "excluded_prompt": "Phones and driving (no ell_status/grade_level in corpus at all)",
+  "l2_dropped_reason": "No documented DAIGT source dataset (checked: darraghdog/Claude, alejopaullier/chat_gpt_moth, radek1, nbroad/Llama-Falcon, kingki19/PaLM) shows a template beyond L1-level (raw/lightly-wrapped assignment text). No persona, word-count target, or student-voice instruction is documented anywhere in the actual generation methodology. Dropped per user direction rather than invented.",
+  "l3_source": "Lu, Liu, He, Ong, Wang, Tang (2024), 'Large Language Models can be Guided to Evade AI-Generated Text Detection', TMLR, Table 11 ('Human-designed prompt to evade AI-generated text detection'). That paper traces the prompt to: Youtube Uploader (2023), 'ChatGPT - pass detection 100% human written with this prompt', https://www.youtube.com/watch?v=Xgc-d7SO4OQ, and to GPTZero creator Edward Tian's stated perplexity/burstiness detection philosophy as reported in The Conversation.",
+  "l3_implementation": "Two-stage: generate via L1, then paraphrase that output with the Table 11 prompt.",
+  "frozen_composite_path": "results/experiment3_frozen_composite.joblib",
+  "frozen_threshold": 0.9400731683995326,
+  "max_ngram5_contamination_overlap": 0.059490084985835696,
+  "gate2_reference_human_independent_subset": {
+    "partial_rho": 0.24947242934955963,
+    "ci_low": 0.2329291782065633,
+    "ci_high": 0.2664612515433686,
+    "note": "Computed once (human 7-prompt independent subset vs frozen composite score, controlling word count); invariant across cells, not literally per-cell."
+  },
+  "note_pilot_scale": "N_PER_PROMPT_TARGET=3 is a PILOT scale, not the doc's full 150/cell design. Intended to validate the rejection-sampling/contamination/scoring pipeline and check distribution overlap before committing to full budget."
+}

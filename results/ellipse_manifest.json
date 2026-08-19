@@ -1,0 +1,27 @@
+{
+  "ellipse_path": "data/ellipse_corpus.csv",
+  "ellipse_sha256": "27652147d6c10c46b63b1d561cf835467b56db507fd6a051028aa254f6a3a7b9",
+  "n_essays": 6482,
+  "n_prompts": 44,
+  "n_same_task": 912,
+  "n_different_task": 5570,
+  "same_task_prompts": [
+    "Cell phones at school",
+    "Community service",
+    "Distance learning",
+    "Grades for extracurricular activities",
+    "Mandatory extracurricular activities",
+    "Seeking multiple opinions",
+    "Summer projects"
+  ],
+  "frozen_threshold": 0.9400731683995326,
+  "seed": 42,
+  "n_bootstrap": 1000,
+  "reference_points": {
+    "persuade_overall_fpr": 0.01,
+    "persuade_ell_fpr": 0.0156,
+    "persuade_non_ell_fpr": 0.0094,
+    "raid_abstracts_fpr": 0.3692
+  },
+  "note": "ELLIPSE is entirely ELL writers, so its FPR is a second, independent read on the ELL fairness question alongside Experiment 3's PERSUADE ELL/non-ELL split, not just a genre-shift check."
+}

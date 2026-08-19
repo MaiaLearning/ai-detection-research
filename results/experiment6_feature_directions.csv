@@ -1,0 +1,9 @@
+feature,standardized_coef,direction_vs_quality,feature_meaning
+function_word_entropy,0.37292297119330803,higher feature value -> HIGHER quality,higher = more even distribution across function words
+punctuation_variety,0.16641230196115328,higher feature value -> HIGHER quality,higher = more distinct punctuation marks used
+transition_phrase_rate,0.16448299139155007,higher feature value -> HIGHER quality,higher = more transition/discourse markers per 100 words
+sentence_length_std,-0.13091608689421672,higher feature value -> LOWER quality,higher = more erratic sentence lengths ('burstiness')
+mtld,-0.10327517292533547,higher feature value -> LOWER quality,higher = more lexically diverse (length-normalized)
+contraction_rate,-0.08587705349296701,higher feature value -> LOWER quality,higher = more contractions/colloquialisms per 100 words
+paragraph_length_variance,-0.020844239719335477,higher feature value -> LOWER quality,higher = less consistent paragraph lengths
+mean_sentence_length,-0.010894018378425864,higher feature value -> LOWER quality,higher = longer average sentences

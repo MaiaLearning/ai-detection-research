@@ -1,0 +1,35 @@
+{
+  "n_total_rows": 25996,
+  "n_after_filter": 24695,
+  "n_dropped_missing_fields": 1301,
+  "n_ell": 2244,
+  "n_non_ell": 22451,
+  "corpus_path": "data/persuade_2.0_human_scores_demo_id_github.csv",
+  "corpus_sha256": "a28abb40eae9075191ae58627132172a576bc21fed7595c76d8318d927b5024d",
+  "seed": 42,
+  "n_bootstrap": 2000,
+  "chosen_caliper": 0.15,
+  "smd_balance_threshold": 0.1,
+  "gate_fail_auc_threshold": 0.65,
+  "n_matched_pairs": 1810,
+  "exact_match_columns": [
+    "prompt_name",
+    "grade_level"
+  ],
+  "caliper_distance_columns": [
+    "z_logwc (standardized log1p word_count)",
+    "z_holistic (standardized holistic_essay_score)"
+  ],
+  "features": [
+    "sentence_length_std",
+    "mean_sentence_length",
+    "type_token_ratio",
+    "mtld",
+    "transition_phrase_rate",
+    "paragraph_length_variance",
+    "punctuation_variety",
+    "contraction_rate",
+    "function_word_entropy"
+  ],
+  "overall_gate_verdict": "PASS"
+}

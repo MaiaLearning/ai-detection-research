@@ -31,3 +31,7 @@ data/ellipse_corpus.csv
 
 # Editor/tool scratch state from research sessions, not part of the study
 .playwright-mcp/
+
+# Intermediate files from scripts/build_pdf.sh (prepped markdown before
+# pandoc/xelatex render) — not the deliverable; the .pdf outputs are.
+.build/

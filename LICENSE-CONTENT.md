@@ -1,9 +1,9 @@
 # License for written content
 
-`PRACTITIONER_BRIEF.md`/`.pdf`, `README.md`, `CLAUDE.md`,
-`RESEARCH_PLAN.md`, `AMENDMENTS.md`, the `EXPERIMENT_*.md` design
-documents, and the contents of `results/` (CSVs, plots, JSON manifests) in
-this repository are licensed under:
+`PRACTITIONER_BRIEF.md`/`.pdf`, `TECHNICAL_REPORT.md`/`.pdf`,
+`README.md`, `CLAUDE.md`, `RESEARCH_PLAN.md`, `AMENDMENTS.md`, the
+`EXPERIMENT_*.md` design documents, and the contents of `results/` (CSVs,
+plots, JSON manifests) in this repository are licensed under:
 
 **Creative Commons Attribution 4.0 International (CC BY 4.0)**
 

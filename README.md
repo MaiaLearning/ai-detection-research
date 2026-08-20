@@ -7,8 +7,12 @@ methodology, and hard constraints are in [`CLAUDE.md`](CLAUDE.md); the
 experimental design is in [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md) and the
 `EXPERIMENT_5.md` / `EXPERIMENT_6.md` design docs. The practitioner-facing
 write-up is [`PRACTITIONER_BRIEF.md`](PRACTITIONER_BRIEF.md)
-([PDF](PRACTITIONER_BRIEF.pdf)) — that's the primary document; this
-repository exists so every number in it can be independently reproduced.
+([PDF](PRACTITIONER_BRIEF.pdf)) — that's the primary document for a
+non-technical reader; this repository exists so every number in it can be
+independently reproduced. A full academic-style paper with the same
+findings in more methodological depth, including the exploratory
+mechanism analysis, is [`TECHNICAL_REPORT.md`](TECHNICAL_REPORT.md)
+([PDF](TECHNICAL_REPORT.pdf)).
 
 `RESEARCH_PLAN.md` was pre-registered before any data was collected (see
 the note at its top); [`AMENDMENTS.md`](AMENDMENTS.md) logs every
@@ -52,6 +56,8 @@ EXPERIMENT_6.md        Design doc for the quality-composite + verification-harne
 EXPERIMENT_7.md        Design doc for the dispersion mechanism test (H1 vs. H2), added post hoc
 AMENDMENTS.md          Log of every consequential decision made or changed mid-study, with reasoning
 PRACTITIONER_BRIEF.md  The practitioner-facing write-up (also available as PRACTITIONER_BRIEF.pdf)
+TECHNICAL_REPORT.md    The full academic-style paper (also available as TECHNICAL_REPORT.pdf)
+scripts/build_pdf.sh   Regenerates both PDFs from their .md sources (uv run not needed; see its own header for required system packages: pandoc, texlive-xetex, fonts-crosextra-caladea/carlito)
 ```
 
 ## A note on this repository's history
@@ -178,7 +184,8 @@ and produces real API spend; it does not bear on the study's conclusions.
 ## License
 
 Source code (`src/`, `scripts/`, `tests/`) is MIT-licensed — see
-[`LICENSE`](LICENSE). Written content (`PRACTITIONER_BRIEF.md`/`.pdf`, this
+[`LICENSE`](LICENSE). Written content (`PRACTITIONER_BRIEF.md`/`.pdf`,
+`TECHNICAL_REPORT.md`/`.pdf`, this
 README, `CLAUDE.md`, `RESEARCH_PLAN.md`, `AMENDMENTS.md`, the experiment
 design docs, and `results/`) is licensed
 CC BY 4.0 — see [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md). Neither license

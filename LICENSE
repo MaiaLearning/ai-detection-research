@@ -3,11 +3,12 @@ This repository contains two categories of content under different licenses:
 1. SOURCE CODE (src/, scripts/, tests/, pyproject.toml, uv.lock, and any other
    .py files) is licensed under the MIT License, reproduced below.
 
-2. WRITTEN CONTENT — PRACTITIONER_BRIEF.md/.pdf, README.md, CLAUDE.md,
-   RESEARCH_PLAN.md, AMENDMENTS.md, the EXPERIMENT_*.md design documents,
-   and the contents of results/ (CSVs, plots, JSON manifests) — is licensed
-   under Creative Commons Attribution 4.0 International (CC BY 4.0). See
-   LICENSE-CONTENT.md for the full notice.
+2. WRITTEN CONTENT — PRACTITIONER_BRIEF.md/.pdf, TECHNICAL_REPORT.md/.pdf,
+   README.md, CLAUDE.md, RESEARCH_PLAN.md, AMENDMENTS.md, the
+   EXPERIMENT_*.md design documents, and the contents of results/ (CSVs,
+   plots, JSON manifests) — is licensed under Creative Commons Attribution
+   4.0 International (CC BY 4.0). See LICENSE-CONTENT.md for the full
+   notice.
 
 Data files under data/ are NOT covered by either license above. Raw
 third-party corpora are excluded from this repository entirely (see

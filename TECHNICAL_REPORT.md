@@ -32,7 +32,7 @@ We approached the question as practitioners rather than as critics. MaiaLearning
 
 **Contributions.**
 
-1. **A quality–detection inversion.** On 24,695 human essays with holistic scores, detector score correlates positively with quality. To our knowledge this connection between detector features and independently-rated writing quality has not previously been measured, despite both feature families being well-studied in isolation (§2, §5.2). [Corrected from an earlier draft's "§3.2," which does not exist — §3 (Data) has no subsections; the AES/detection literature gap this sentence refers to is discussed in §2, "The gap we address."]
+1. **A quality–detection inversion.** On 24,695 human essays with holistic scores, detector score correlates positively with quality. To our knowledge this connection between detector features and independently-rated writing quality has not previously been measured, despite both feature families being well-studied in isolation (§2, §5.2).
 2. **A quantified genre-transfer failure.** A calibration ladder from 1% to 36.9% FPR on human writing under a fixed threshold (§5.4).
 3. **A topic-invariant ELL penalty**, replicated across corpora, with a 2×2 test excluding topic novelty as the mechanism (§5.5).
 4. **An inverted capability gradient.** Current frontier models were the *most* detectable of 17 sources; open-weight and older models the least (§5.6).
@@ -70,7 +70,7 @@ We pre-registered gate thresholds before data collection and report the predicti
 
 **PERSUADE 2.0** comprises argumentative essays by US students in grades 6–12, collected before the release of ChatGPT, making human authorship reliable. It carries holistic quality scores and demographic annotations including ELL status. Filtering criteria (`src/data.py::load_and_clean`), applied identically by every script in this study: of 25,996 raw rows, a row is kept only if all of `ell_status` (recoded to a clean Yes/No flag, dropping any other value), `grade_level`, `holistic_essay_score`, `word_count`, `prompt_name`, and `full_text` are non-null. This drops 1,301 rows (5.0%), leaving n = 24,695 (2,244 ELL, 22,451 non-ELL). No length or other content filter is applied to the human corpus.
 
-**DAIGT-v2's generator-source column contains 15 distinct labels** in the subset used here — `NousResearch/Llama-2-7b-chat-hf`, `chat_gpt_moth`, `cohere-command`, `darragh_claude_v6`, `darragh_claude_v7`, `falcon_180b_v1`, `kingki19_palm`, `llama2_chat`, `llama_70b_v1`, `mistral7binstruct_v1`, `mistral7binstruct_v2`, `mistralai/Mistral-7B-Instruct-v0.1`, `palm-text-bison1`, `radek_500`, `radekgpt4` — not 14 as earlier drafts of this report and its underlying script's docstring stated; corrected throughout. Together with our own Bedrock and OpenAI generations (1 source each), this gives the 17 generator sources cited in the abstract, §5.3, and §6 (15 + 2 = 17; verified against `results/experiment3_manifest.json`'s `ai_sources` list directly, not re-derived from the corrected count by arithmetic that could itself be wrong).
+**DAIGT-v2's generator-source column contains 15 distinct labels** in the subset used here — `NousResearch/Llama-2-7b-chat-hf`, `chat_gpt_moth`, `cohere-command`, `darragh_claude_v6`, `darragh_claude_v7`, `falcon_180b_v1`, `kingki19_palm`, `llama2_chat`, `llama_70b_v1`, `mistral7binstruct_v1`, `mistral7binstruct_v2`, `mistralai/Mistral-7B-Instruct-v0.1`, `palm-text-bison1`, `radek_500`, `radekgpt4` — not 14, a miscount that has circulated with this corpus. Together with our own Bedrock and OpenAI generations (1 source each), this gives the 17 generator sources cited in the abstract, §5.3, and §6.
 
 **Generated sets.** We generated 1,000 essays with `us.anthropic.claude-sonnet-5` via AWS Bedrock ($8.97) and 1,000 with `gpt-5.6-terra` via the OpenAI API, both on PERSUADE prompts at temperature 1.0. Two limitations are logged: the generation prompt was generic rather than production's system prompt, and for the seven text-dependent PERSUADE prompts the models wrote from general knowledge, since the corpus carries citations but not source article text.
 
@@ -378,15 +378,13 @@ A competent uniformity-based detector, evaluated at an operating point strict en
 
 ## References
 
-*[RESOLVED, with two flagged corrections below. All DOIs verified against publisher/ACL Anthology/arXiv records at resolution time; none fabricated — where a venue does not assign a DOI (the two ICML/PMLR papers), that is stated instead of inventing one.]*
-
 Casal, E. J., & Lee, J. J. (2019). Syntactic complexity and writing quality in assessed first-year L2 writing. *Journal of Second Language Writing*, 44, 51–62. https://doi.org/10.1016/j.jslw.2019.03.005
 
 Crossley, S. A. (2020). Linguistic features in writing quality and development: An overview. *Journal of Writing Research*, 11(3), 415–443. https://doi.org/10.17239/jowr-2020.11.03.01
 
-Crossley, S. A., Baffour, P., Benner, M., Boser, U., Franklin, A., & Tian, Y. (2024). A large-scale corpus for assessing written argumentation: PERSUADE 2.0. *Assessing Writing*, 61, Article 100865. https://doi.org/10.1016/j.asw.2024.100865 [Primary corpus citation — corrected from an earlier draft that cited only the 1.0 paper below; this study depends on the holistic scores and ELL annotation that 2.0 added.]
+Crossley, S. A., Baffour, P., Benner, M., Boser, U., Franklin, A., & Tian, Y. (2024). A large-scale corpus for assessing written argumentation: PERSUADE 2.0. *Assessing Writing*, 61, Article 100865. https://doi.org/10.1016/j.asw.2024.100865 — the corpus version used in this study, which depends on the holistic scores and ELL annotation PERSUADE 2.0 added over 1.0.
 
-Crossley, S. A., Baffour, P., Tian, Y., Picou, A., Benner, M., & Boser, U. (2022). The persuasive essays for rating, selecting, and understanding argumentative and discourse elements (PERSUADE) corpus 1.0. *Assessing Writing*, 54, Article 100667. https://doi.org/10.1016/j.asw.2022.100667 [Lineage reference: the precursor corpus PERSUADE 2.0 builds on, kept here to credit its full history; not the version this study's data comes from.]
+Crossley, S. A., Baffour, P., Tian, Y., Picou, A., Benner, M., & Boser, U. (2022). The persuasive essays for rating, selecting, and understanding argumentative and discourse elements (PERSUADE) corpus 1.0. *Assessing Writing*, 54, Article 100667. https://doi.org/10.1016/j.asw.2022.100667 — the precursor corpus 2.0 builds on, cited for lineage.
 
 Deep, P. D., Edgington, W. D., Ghosh, N., & Rahaman, M. S. (2025). Evaluating the effectiveness and ethical implications of AI detection tools in higher education. *Information*, 16(10), Article 905. https://doi.org/10.3390/info16100905
 
@@ -396,7 +394,7 @@ Elkhatat, A. M., Elsaid, K., & Almeer, S. (2023). Evaluating the efficacy of AI 
 
 Hans, A., Schwarzschild, A., Cherepanova, V., Kazemi, H., Saha, A., Goldblum, M., Geiping, J., & Goldstein, T. (2024). Spotting LLMs with Binoculars: Zero-shot detection of machine-generated text. *Proceedings of the 41st International Conference on Machine Learning*, PMLR 235:17519–17537. No DOI assigned (PMLR does not issue them). arXiv:2401.12070
 
-Herbold, S., Hautli-Janisz, A., Heuer, U., Kikteva, Z., & Trautsch, A. (2023). AI, write an essay for me: A large-scale comparison of human-written versus ChatGPT-generated essays. arXiv:2304.14276. [Confirmed: ID matches title/content. Subsequently published in *Scientific Reports*; journal DOI not independently confirmed here, so not stated to avoid guessing one.]
+Herbold, S., Hautli-Janisz, A., Heuer, U., Kikteva, Z., & Trautsch, A. (2023). AI, write an essay for me: A large-scale comparison of human-written versus ChatGPT-generated essays. arXiv:2304.14276.
 
 Liang, W., Yuksekgonul, M., Mao, Y., Wu, E., & Zou, J. (2023). GPT detectors are biased against non-native English writers. *Patterns*, 4(7), Article 100779. https://doi.org/10.1016/j.patter.2023.100779 (arXiv:2304.02819)
 
@@ -408,10 +406,10 @@ Perkins, M., Roe, J., Vu, B. H., Postma, D., Hickerson, D., & McGaughran, J. (20
 
 Pratama, A. R. (2025). The accuracy-bias trade-offs in AI text detection tools and their impact on fairness in scholarly publication. *PeerJ Computer Science*, 11, e2953. https://doi.org/10.7717/peerj-cs.2953
 
-Sadasivan, V. S., Kumar, A., Balasubramanian, S., Wang, W., & Feizi, S. (2024). Can AI-generated text be reliably detected? arXiv:2303.11156. [Confirmed: ID matches title/content; first submitted March 2023, revised through 2025 — cited year is a defensible but not the only choice.]
+Sadasivan, V. S., Kumar, A., Balasubramanian, S., Wang, W., & Feizi, S. (2024). Can AI-generated text be reliably detected? arXiv:2303.11156.
 
-Turnitin (2023). New research: Turnitin's AI detector shows no statistically significant bias against English Language Learners. Turnitin Blog, October 2023. https://www.turnitin.com/blog/new-research-turnitin-s-ai-detector-shows-no-statistically-significant-bias-against-english-language-learners [Note on reference type: a blog post, not a peer-reviewed source — cited only for the narrow, verifiable claim that Turnitin's own detector showed no significant ELL bias on its own test sample, not as methodological authority over Liang et al. The drafted arXiv ID this entry originally carried, 2312.05241, resolved to an unrelated paper and has been removed; see §1 for the fuller trace of a related misattribution this search corrected.]
+Turnitin (2023). New research: Turnitin's AI detector shows no statistically significant bias against English Language Learners. Turnitin Blog, October 2023. https://www.turnitin.com/blog/new-research-turnitin-s-ai-detector-shows-no-statistically-significant-bias-against-english-language-learners — a blog post, not a peer-reviewed source, cited only for the narrow claim that Turnitin's own detector showed no significant ELL bias on its own test sample.
 
 Weber-Wulff, D., Anohina-Naumeca, A., Bjelobaba, S., Foltýnek, T., Guerrero-Dib, J., Popoola, O., Šigut, P., & Waddington, L. (2023). Testing of detection tools for AI-generated text. *International Journal for Educational Integrity*, 19, Article 26. https://doi.org/10.1007/s40979-023-00146-z
 
-Al Ali, A., Helcl, J., & Libovický, J. (2026). Different time, different language: Revisiting the bias against non-native speakers in GPT detectors. *Proceedings of the EACL 2026 Student Research Workshop*. https://aclanthology.org/2026.eacl-srw.20/ (arXiv:2602.05769) [Confirmed real: exists, matches the title and Czech-language non-native-bias-replication description used in §2; authors added since the in-text mention only said "a Czech-language replication."]
+Al Ali, A., Helcl, J., & Libovický, J. (2026). Different time, different language: Revisiting the bias against non-native speakers in GPT detectors. *Proceedings of the EACL 2026 Student Research Workshop*. https://aclanthology.org/2026.eacl-srw.20/ (arXiv:2602.05769)

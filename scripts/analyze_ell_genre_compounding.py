@@ -1,5 +1,8 @@
 """Do ELL status and genre/topic shift compound, or are they independent?
 
+Not in the original plan or either EXPERIMENT_*.md design doc -- see
+AMENDMENTS.md, item 3, for when and why this was added mid-study.
+
 User-directed follow-up. ELLIPSE's "different task" FPR (3.73%) mixes two
 things: ELL population AND unseen topics, both relative to PERSUADE. To
 separate them, this fits a SEPARATE diagnostic composite (not the main

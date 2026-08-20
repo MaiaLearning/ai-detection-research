@@ -9,6 +9,14 @@ experimental design is in [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md) and the
 in this repo — see below) is the primary write-up; this repository exists so
 every number in it can be independently reproduced.
 
+`RESEARCH_PLAN.md` was pre-registered before any data was collected (see
+the note at its top); [`AMENDMENTS.md`](AMENDMENTS.md) logs every
+consequential decision made or changed after that point, including the two
+analyses below that have no design doc of their own and the one gate
+threshold the original plan never numerically specified. Read it before
+treating any of the mid-study additions as having been planned in advance —
+they weren't, and that document says so plainly.
+
 ## Findings summary
 
 | Gate / experiment | Result |
@@ -34,10 +42,22 @@ tests/                pytest suite for everything in src/ (72 tests, ~3s)
 data/                 Corpora (see Data below — most are NOT committed here)
 results/              CSVs, plots, and JSON manifests written by scripts/ (committed)
 CLAUDE.md             Project constraints and conventions
-RESEARCH_PLAN.md       Original experimental design (experiments 1-4)
+RESEARCH_PLAN.md       Original experimental design (experiments 1-4), pre-registered 2026-08-13
 EXPERIMENT_5.md        Design doc for the prompting-effort experiment (shelved)
 EXPERIMENT_6.md        Design doc for the quality-composite + verification-harness experiment
+AMENDMENTS.md          Log of every consequential decision made or changed mid-study, with reasoning
 ```
+
+## A note on this repository's history
+
+This repository was pushed as a single commit imported from the working
+directory where the study was conducted — it does not preserve an
+incremental commit history, so git alone cannot corroborate the
+pre-registration and amendment timeline this README and `AMENDMENTS.md`
+describe. That limitation is disclosed rather than papered over: see the
+closing section of `AMENDMENTS.md` for exactly what evidence does and
+doesn't exist for that timeline, and why we didn't try to construct commit
+history that would misrepresent when the work actually happened.
 
 ## Setup
 

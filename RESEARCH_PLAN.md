@@ -1,5 +1,16 @@
 # Calibration study: statistical texture measures on student essays
 
+> **Pre-registration note.** This plan was written on 2026-08-13, before any
+> data was downloaded or any code was written. The AUC > 0.65 threshold in
+> Experiment 1 and the ≤1% target FPR in Experiment 3 were fixed at that
+> time, prior to seeing any result they would later be judged against.
+> Experiments 5 and 6 do not appear below — they were designed later, in
+> response to findings from Experiments 1-4, and are documented separately
+> in `EXPERIMENT_5.md` and `EXPERIMENT_6.md`. See `AMENDMENTS.md` for a full
+> log of decisions made or changed during the study, including the one gate
+> threshold (Experiment 2's "meaningful correlation") that this plan never
+> numerically specified.
+
 ## Background
 
 MaiaLearning's essay review feature currently asks Claude to output a probability

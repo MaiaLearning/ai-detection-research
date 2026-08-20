@@ -1,5 +1,8 @@
 """Near-genre FPR check on ELLIPSE, using Experiment 3's frozen composite.
 
+Not in the original plan or either EXPERIMENT_*.md design doc -- see
+AMENDMENTS.md, item 3, for when and why this was added mid-study.
+
 User-directed follow-up before the writeup: RAID/abstracts showed severe
 domain-shift degradation (1% -> 36.9% FPR). ELLIPSE is a far smaller shift
 (still student essays responding to short-answer prompts) and does double

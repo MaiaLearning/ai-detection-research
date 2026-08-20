@@ -30,7 +30,7 @@ they weren't, and that document says so plainly.
 | ELL × genre compounding | No compounding — the ELL FPR penalty is intrinsic to ELL status, not explained by topic novelty |
 | 6 — features carry quality above word count? | **NO** — M1−M0 delta ρ = **−0.079** (CI −0.086 to **−0.072**), replicated on a held-out set |
 | 5 — vendor vs. prompting-effort confound | Shelved: DAIGT's real generation prompts turned out to be unscaffolded, dissolving the premise |
-| 7 — mechanism: pretraining polish (H1) vs. post-training homogenization (H2)? | **Mixed, exploratory.** Dispersion ordering held exactly (frontier < older < open-weight < human), but the pre-registered dispersion-vs-TPR correlation (ρ = −0.321) didn't clear its own \|ρ\|>0.5 bar; centroid distance from human predicted TPR more strongly (ρ = 0.775). The H1 direction check came back null/wrong-signed (ρ = −0.174), and a direct follow-up measurement — cosine similarity between the composite's discriminant vector and the human-mean-to-top-quality-quartile vector — came back **near-orthogonal (0.067, 86.2°)**, indistinguishable from chance in 9 dimensions. Leans mildly toward H2, confirms neither. n=17, not decisive — see `AMENDMENTS.md` item 6 |
+| 7 — mechanism: pretraining polish (H1) vs. post-training homogenization (H2)? | **Mixed, exploratory.** Dispersion ordering held exactly (frontier < older < open-weight < human), but the pre-registered dispersion-vs-TPR correlation (ρ = −0.321) didn't clear its own \|ρ\|>0.5 bar (itself set without a power calculation at n=17 — see `AMENDMENTS.md` item 2); centroid distance from human predicted TPR more strongly (ρ = 0.775). The H1 direction check came back null/wrong-signed (ρ = −0.174). A follow-up cosine test between the composite's discriminant vector and the quality vector first read as near-orthogonal (0.067, 86.2°), but that reading did not survive conditioning both vectors on word count the same way — residualized, the alignment is real (cosine 0.533, 57.8°); a related Pearson-vs-Spearman check found Gate 2's positive quality correlation is a rank effect, not a linear one, on the same sample. Leans mildly toward H2, confirms neither. n=17, not decisive — see `AMENDMENTS.md` item 6 |
 
 Net: this study does not support shipping a scoring panel of this design —
 the panel was shipped, evaluated, and is being withdrawn. See
@@ -144,6 +144,7 @@ uv run python scripts/analyze_ell_genre_compounding.py     # also writes the dia
 uv run python scripts/experiment6_quality_composite.py
 uv run python scripts/experiment6_verification_demo.py
 uv run python scripts/experiment7_dispersion.py            # reuses experiment3's scored feature matrix; no new data or API calls
+uv run python scripts/analyze_discriminant_conditioning.py # two conditioning checks on experiment 7's discriminant/quality cosine; needs experiment3_human_scores.csv above
 ```
 
 `scripts/experiment5_prompt_effort.py` exists but is **shelved** — see the

@@ -59,6 +59,7 @@ from src.dispersion import (
     covariance_trace,
     mean_distance_to_centroid,
     project_onto_vector,
+    residualize_on_length,
     standardize_by_reference,
 )
 from src.stats_utils import bootstrap_stat_ci
@@ -107,17 +108,6 @@ def load_ai_sources() -> pd.DataFrame:
 
 def compute_feature_matrix(texts: pd.Series) -> pd.DataFrame:
     return pd.DataFrame({name: texts.apply(fn) for name, fn in feat.TIER1_FEATURES.items()}, index=texts.index)
-
-
-def residualize_on_length(X: np.ndarray, log_wc: np.ndarray, reg_models: list) -> np.ndarray:
-    """Subtract each feature's length-predicted component (regression fit
-    on human data only, applied uniformly) -- removes residual length
-    confound from the standardized features before computing dispersion."""
-    residuals = np.zeros_like(X)
-    for j, model in enumerate(reg_models):
-        predicted = model.predict(log_wc.reshape(-1, 1))
-        residuals[:, j] = X[:, j] - predicted
-    return residuals
 
 
 def dispersion_with_ci(X: np.ndarray, common_n: int, seed: int) -> dict:

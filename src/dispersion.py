@@ -44,3 +44,16 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     rescaling, so standardizing a and b with different scalers before
     calling this would silently produce a meaningless angle."""
     return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
+
+
+def residualize_on_length(X: np.ndarray, log_wc: np.ndarray, reg_models: list) -> np.ndarray:
+    """Subtract each feature's length-predicted component (one fitted
+    regression model per column, typically fit on human data only and
+    applied uniformly across groups) -- removes a length confound from
+    already-standardized features before computing dispersion or a
+    discriminant direction in the residualized space."""
+    residuals = np.zeros_like(X)
+    for j, model in enumerate(reg_models):
+        predicted = model.predict(log_wc.reshape(-1, 1))
+        residuals[:, j] = X[:, j] - predicted
+    return residuals

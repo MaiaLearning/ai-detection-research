@@ -92,6 +92,21 @@ def partial_spearman(x, y, z) -> float:
     return float((rho_xy - rho_xz * rho_yz) / denom)
 
 
+def partial_pearson(x, y, z) -> float:
+    """Pearson correlation between x and y with z partialled out, via the
+    same partial-correlation formula as partial_spearman but on raw Pearson
+    r instead of rank correlation -- use this to check whether a gap between
+    a Spearman-based result and a linear-geometry result (e.g. cosine
+    similarity) reflects genuine nonlinearity rather than a rank/linear
+    artifact."""
+    x, y, z = np.asarray(x, dtype=float), np.asarray(y, dtype=float), np.asarray(z, dtype=float)
+    r_xy = np.corrcoef(x, y)[0, 1]
+    r_xz = np.corrcoef(x, z)[0, 1]
+    r_yz = np.corrcoef(y, z)[0, 1]
+    denom = np.sqrt((1 - r_xz ** 2) * (1 - r_yz ** 2))
+    return float((r_xy - r_xz * r_yz) / denom)
+
+
 def bootstrap_stat_ci(
     arrays: list,
     stat_fn,

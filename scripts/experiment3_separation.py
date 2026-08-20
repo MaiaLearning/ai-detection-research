@@ -39,7 +39,10 @@ as a follow-up decision rather than assumed here.
 
 Usage: uv run python scripts/experiment3_separation.py
 Output: results/experiment3_separation.csv, results/experiment3_tpr_by_model.png,
-        results/experiment3_gate2_composite.png, results/experiment3_manifest.json
+        results/experiment3_gate2_composite.png, results/experiment3_manifest.json,
+        results/experiment3_ai_scores.csv, results/experiment3_human_scores.csv
+        (the last two persist per-essay OOF P(AI) scores for reuse by later
+        analyses, e.g. the Experiment 7 conditioning checks)
 """
 import json
 import sys
@@ -158,6 +161,17 @@ def main():
     })
     ai_scores_df.to_csv(RESULTS_DIR / "experiment3_ai_scores.csv", index=False)
 
+    # Persisted so downstream analyses can reuse the EXACT same out-of-fold
+    # P(AI) scores Gate 2 above is computed from, instead of recomputing a
+    # fresh CV fit and risking a subtle mismatch (fold assignment, row order).
+    human_scores_df = pd.DataFrame({
+        "prompt_name": human["prompt_name"], "task": human["task"],
+        "word_count": human["word_count"], "ell_clean": human["ell_clean"],
+        "holistic_essay_score": human["holistic_essay_score"],
+        "p_ai_oof_score": human_scores,
+    })
+    human_scores_df.to_csv(RESULTS_DIR / "experiment3_human_scores.csv", index=False)
+
     # Frozen composite for reuse by later experiments: fit ONCE on all of
     # experiment 3's human+AI data (not cross-validated), so a downstream
     # experiment can score genuinely new essays without ever refitting.
@@ -274,6 +288,7 @@ def main():
             "training data would leak; scoring genuinely new essays with it does not."
         ),
         "ai_scores_path": "results/experiment3_ai_scores.csv",
+        "human_scores_path": "results/experiment3_human_scores.csv",
     }
     with open(RESULTS_DIR / "experiment3_manifest.json", "w") as f:
         json.dump(manifest, f, indent=2)

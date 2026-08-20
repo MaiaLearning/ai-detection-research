@@ -55,6 +55,20 @@ above) does not depend on this per-feature threshold. The 0.1 cutoff
 remains in the per-feature code and its output, labeled for what it is
 rather than removed.
 
+**The same failure mode recurred in item 6.** Experiment 7's pre-registered
+correlation threshold (dispersion vs. TPR: negative, |ρ| > 0.5) was set
+without a power calculation at n = 17 sources — a threshold chosen because
+it "sounded like a strong correlation," not because a power analysis said
+it was the right bar for 17 data points to plausibly clear. At n = 17, a
+bootstrap CI wide enough to include ρ = −0.5 comfortably is close to
+guaranteed unless the true relationship is very strong and very clean; the
+threshold made a genuine effect look like a failed prediction (dispersion
+vs. TPR came in at ρ = −0.321, right direction, short of the bar) when a
+properly powered threshold might have called it differently. This is
+disclosed as the analyst's own design error, made the same way as the item
+above: a number set post hoc by feel rather than by calculation, presented
+as if it were a pre-registered bar with statistical teeth.
+
 ## 3. ELLIPSE near-genre and ELL × genre compounding analyses added mid-study
 
 Not in the original plan or either `EXPERIMENT_*.md` design doc. Added
@@ -217,19 +231,70 @@ negative, |ρ| > 0.5).
   finding measured two ways. (No CI is reported on the angle itself: it is
   a fixed geometric quantity between two vectors, not a sampled statistic;
   human n = 24,695 makes the quality-quartile centroid a stable estimate.)
+- **Two conditioning checks on that cosine result** (`scripts/analyze_discriminant_conditioning.py`,
+  `results/experiment7_conditioning_checks.json`), run because the 0.067/86.2°
+  result above compares two vectors that were NOT conditioned on word count
+  the same way (the discriminant was fit on raw features; Gate 2's +0.135
+  explicitly removes word count), and because +0.135 is a Spearman
+  (rank) statistic being compared, in spirit, against a linear-geometry
+  one (cosine). Both results are logged here **alongside**, not in place
+  of, the original 0.067/86.2° figure — the discrepancy between
+  conditionings is itself part of the finding.
+    - *Check 1 (consistent conditioning):* residualizing both vectors on
+      log word count (regressions fit on human data only, applied
+      uniformly to AI) in the same standardized space, then refitting the
+      discriminant in that residualized space, moves the result from
+      **cosine 0.067 (86.2°) to cosine 0.533 (57.8°)** — well outside the
+      ~0.33 (1 SD) noise band for two random 9-D vectors. The original
+      near-orthogonal reading does not survive consistent conditioning:
+      **the original claim is retracted.** Once both vectors are freed of
+      word-count confounding, the composite's discriminant direction and
+      the human quality direction show a real, moderate alignment — not
+      full alignment (57.8° is still closer to orthogonal than to
+      parallel), but clearly more overlap than chance.
+    - *Check 2 (rank vs. linear):* the Pearson partial correlation between
+      the composite's OOF P(AI) score and quality, controlling word count,
+      on the identical sample and scores Gate 2 used
+      (`results/experiment3_human_scores.csv`), is **−0.027 (CI −0.046 to
+      0.002)** — not merely smaller than Gate 2's Spearman partial of
+      **+0.135 (CI 0.123 to 0.148)**, but on the opposite side of zero,
+      with non-overlapping CIs. Gate 2's positive quality correlation is a
+      rank/monotonic relationship that does not reproduce as a linear
+      one on the same data. This does not invalidate Gate 2 — Spearman
+      was the statistic actually specified and computed there, and it
+      still is what it is — but it means the relationship is better
+      described as monotonic-but-nonlinear than as a simple linear tilt,
+      and the two framings should not be treated as interchangeable.
+    - **Stated outcome, using the four-way table set up in advance for
+      this check:** neither pure cell fits exactly. The angle moved well
+      below its original 86° (favoring "conditioning artifact"), while the
+      Pearson comparison came in not just below but sign-reversed relative
+      to the Spearman value (favoring "nonlinearity artifact"). Read
+      together this lands closest to the **"both artifacts" cell** — both
+      of the original single-number framings (a near-orthogonal cosine; a
+      simple linear positive quality tilt) turn out to be sensitive to
+      choices (conditioning, rank vs. linear) that were not controlled for
+      identically across the two vectors/statistics being compared. That
+      does not mean nothing is there: after correcting both issues, a
+      real, moderate, positive geometric alignment remains (cosine 0.533),
+      and Gate 2's rank-based finding stands on its own terms. It means
+      the original 86°/0.067 "genuine puzzle" framing overstated the case,
+      and should not be repeated in the write-up without this correction
+      attached.
 
 **Verdict:** the data leans mildly toward H2 over H1 — the ordering
 prediction held, and centroid distance (a homogenization-flavored measure)
 predicts TPR more strongly than dispersion does — but this experiment does
 not confirm H2 outright, since its own pre-registered dispersion-TPR test
 came in short of the threshold set for it, and n = 17 is too small to treat
-any of these correlations as decisive. The direction check, and its
-direct-measurement follow-up (the near-orthogonal discriminant/quality
-cosine above), both argue against H1 as stated: whatever the composite's
-discriminant axis is picking up, it is not well described as "the same
-direction as human-rated quality." Neither hypothesis should be reported as
-confirmed; this is suggestive, correlational evidence about model outputs,
-not a demonstration about what any lab actually trained on.
+any of these correlations as decisive. The direction check argues against
+H1 as stated (weak, wrong-signed correlation with TPR across sources), but
+the follow-up discriminant/quality cosine no longer supports reading that
+as a clean near-orthogonal result once both vectors are conditioned on
+word count consistently — see the conditioning checks above. Neither
+hypothesis should be reported as confirmed; this is suggestive,
+correlational evidence about model outputs, not a demonstration about what
+any lab actually trained on.
 
 ## On this repository's single commit
 

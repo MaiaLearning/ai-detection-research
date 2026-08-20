@@ -1,0 +1,26 @@
+{
+  "seed": 42,
+  "n_bootstrap": 1000,
+  "noise_band_1sd_cosine": 0.3333333333333333,
+  "check1_residualized_direction_angle": {
+    "original_cosine": 0.0670290897421037,
+    "original_angle_degrees": 86.15663440557027,
+    "residualized_cosine": 0.5329896448434535,
+    "residualized_angle_degrees": 57.79232347114287,
+    "standardization": "Both vectors expressed in the frozen composite's own StandardScaler space (same space the original cosine used), then residualized on log1p(word_count) via regressions fit on human data only and applied uniformly to AI. The discriminant vector is a FRESH LogisticRegression fit on the residualized human+AI matrix -- the original composite's coefficients are not meaningful in this changed feature space."
+  },
+  "check2_pearson_vs_spearman": {
+    "raw_pearson": -0.08013397083773417,
+    "partial_pearson": {
+      "point": -0.027226559018454503,
+      "ci_low": -0.04644771824875674,
+      "ci_high": 0.0021585707021420193
+    },
+    "gate2_partial_spearman_for_comparison": {
+      "point": 0.1349832622756587,
+      "ci_low": 0.1227269601975168,
+      "ci_high": 0.1475076425237576
+    },
+    "note": "Both computed on results/experiment3_human_scores.csv -- the exact OOF P(AI) scores Gate 2 used, not recomputed."
+  }
+}

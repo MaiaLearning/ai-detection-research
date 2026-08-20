@@ -54,5 +54,6 @@
   "note_held_out": "All composite scores (human and AI) are out-of-fold predictions from 5-fold stratified CV; no threshold, subgroup rate, or correlation above uses a prediction the model was trained on.",
   "frozen_composite_path": "results/experiment3_frozen_composite.joblib",
   "note_frozen_composite": "Separate from the OOF-CV numbers above: a StandardScaler + LogisticRegression fit ONCE on all of this experiment's human+AI data (not cross-validated), for later experiments to score brand-new essays without refitting. Reusing it on essays already in this run's training data would leak; scoring genuinely new essays with it does not.",
-  "ai_scores_path": "results/experiment3_ai_scores.csv"
+  "ai_scores_path": "results/experiment3_ai_scores.csv",
+  "human_scores_path": "results/experiment3_human_scores.csv"
 }

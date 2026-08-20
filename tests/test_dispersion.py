@@ -11,6 +11,7 @@ from src.dispersion import (
     covariance_trace,
     mean_distance_to_centroid,
     project_onto_vector,
+    residualize_on_length,
     standardize_by_reference,
 )
 
@@ -88,3 +89,26 @@ def test_cosine_similarity_opposite_direction_is_negative_one():
     a = np.array([1.0, 2.0, 3.0])
     b = np.array([-1.0, -2.0, -3.0])
     assert cosine_similarity(a, b) == pytest.approx(-1.0)
+
+
+def test_residualize_on_length_removes_a_perfect_linear_length_relationship():
+    from sklearn.linear_model import LinearRegression
+
+    log_wc = np.array([1.0, 2.0, 3.0, 4.0])
+    X = np.column_stack([2 * log_wc + 1.0, np.array([5.0, 5.0, 5.0, 5.0])])  # col 0 perfectly length-driven, col 1 constant
+    models = [LinearRegression().fit(log_wc.reshape(-1, 1), X[:, j]) for j in range(X.shape[1])]
+    residuals = residualize_on_length(X, log_wc, models)
+    assert residuals[:, 0] == pytest.approx(np.zeros(4), abs=1e-9)
+    assert residuals[:, 1] == pytest.approx(np.zeros(4), abs=1e-9)
+
+
+def test_residualize_on_length_applies_human_fit_models_to_new_data():
+    from sklearn.linear_model import LinearRegression
+
+    human_log_wc = np.array([1.0, 2.0, 3.0, 4.0])
+    human_X = np.column_stack([3 * human_log_wc])
+    models = [LinearRegression().fit(human_log_wc.reshape(-1, 1), human_X[:, 0])]
+    other_log_wc = np.array([2.0])
+    other_X = np.array([[10.0]])  # predicted from human's fit would be 3*2=6, residual = 4
+    residuals = residualize_on_length(other_X, other_log_wc, models)
+    assert residuals[:, 0] == pytest.approx([4.0])

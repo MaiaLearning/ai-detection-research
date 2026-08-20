@@ -10,6 +10,7 @@ from src.stats_utils import (
     bootstrap_corr_ci,
     bootstrap_stat_ci,
     compute_auc,
+    partial_pearson,
     partial_spearman,
     rate_at_threshold,
     threshold_at_fpr,
@@ -81,6 +82,43 @@ def test_partial_spearman_removes_correlation_induced_by_shared_confound():
     partial = partial_spearman(x, y, z)
     assert raw > 0.8  # strong spurious correlation via shared confound
     assert abs(partial) < 0.2  # mostly explained away once z is controlled
+
+
+def test_partial_pearson_close_to_raw_when_control_is_independent():
+    rng = np.random.default_rng(1)
+    n = 2000
+    x = rng.normal(size=n)
+    y = 2 * x + rng.normal(scale=0.5, size=n)
+    z = rng.normal(size=n)  # independent of both x and y
+    raw = np.corrcoef(x, y)[0, 1]
+    partial = partial_pearson(x, y, z)
+    assert partial == pytest.approx(raw, abs=0.05)
+
+
+def test_partial_pearson_removes_correlation_induced_by_shared_confound():
+    rng = np.random.default_rng(0)
+    n = 2000
+    z = rng.normal(size=n)
+    x = z + rng.normal(scale=0.1, size=n)  # x driven mostly by z
+    y = z + rng.normal(scale=0.1, size=n)  # y driven mostly by z, independent noise
+    raw = np.corrcoef(x, y)[0, 1]
+    partial = partial_pearson(x, y, z)
+    assert raw > 0.8  # strong spurious correlation via shared confound
+    assert abs(partial) < 0.2  # mostly explained away once z is controlled
+
+
+def test_partial_pearson_matches_partial_spearman_on_rank_data():
+    # partial_pearson on already-ranked data should equal partial_spearman
+    # on the raw data (Spearman IS Pearson on ranks) -- a cross-check that
+    # the two formulas are the same computation applied to different inputs.
+    rng = np.random.default_rng(2)
+    n = 500
+    z = rng.normal(size=n)
+    x = z + rng.normal(scale=0.3, size=n)
+    y = -z + rng.normal(scale=0.3, size=n)
+    from scipy.stats import rankdata
+    ranked = partial_pearson(rankdata(x), rankdata(y), rankdata(z))
+    assert ranked == pytest.approx(partial_spearman(x, y, z), abs=1e-9)
 
 
 def test_bootstrap_corr_ci_contains_point_estimate():

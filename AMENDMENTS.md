@@ -258,29 +258,48 @@ negative, |ρ| > 0.5).
       (`results/experiment3_human_scores.csv`), is **−0.027 (CI −0.046 to
       0.002)** — not merely smaller than Gate 2's Spearman partial of
       **+0.135 (CI 0.123 to 0.148)**, but on the opposite side of zero,
-      with non-overlapping CIs. Gate 2's positive quality correlation is a
-      rank/monotonic relationship that does not reproduce as a linear
-      one on the same data. This does not invalidate Gate 2 — Spearman
-      was the statistic actually specified and computed there, and it
-      still is what it is — but it means the relationship is better
-      described as monotonic-but-nonlinear than as a simple linear tilt,
-      and the two framings should not be treated as interchangeable.
-    - **Stated outcome, using the four-way table set up in advance for
-      this check:** neither pure cell fits exactly. The angle moved well
-      below its original 86° (favoring "conditioning artifact"), while the
-      Pearson comparison came in not just below but sign-reversed relative
-      to the Spearman value (favoring "nonlinearity artifact"). Read
-      together this lands closest to the **"both artifacts" cell** — both
-      of the original single-number framings (a near-orthogonal cosine; a
-      simple linear positive quality tilt) turn out to be sensitive to
-      choices (conditioning, rank vs. linear) that were not controlled for
-      identically across the two vectors/statistics being compared. That
-      does not mean nothing is there: after correcting both issues, a
-      real, moderate, positive geometric alignment remains (cosine 0.533),
-      and Gate 2's rank-based finding stands on its own terms. It means
-      the original 86°/0.067 "genuine puzzle" framing overstated the case,
-      and should not be repeated in the write-up without this correction
-      attached.
+      with non-overlapping CIs.
+    - **Correction to how Check 2 was first read here:** an earlier version
+      of this entry called the Pearson/Spearman gap an "artifact" alongside
+      Check 1's conditioning artifact. On review that framing was wrong.
+      Both estimates are tight (n = 24,695) and disagree in sign — that
+      combination is not what a broken measurement looks like; it is what
+      a relationship concentrated in *part* of the quality range looks
+      like, seen through a rank statistic that is sensitive to it and a
+      linear one that averages it away. Spearman was the statistic
+      specified in the original plan and is the one to keep. The sign
+      reversal is diagnostic, not disqualifying, of Gate 2's finding.
+    - **Where the effect is concentrated** (`scripts/analyze_quality_bin_profile.py`,
+      `results/experiment7_quality_bin_profile.csv/.png`): binning human
+      essays by their integer holistic score (1-6) and plotting mean
+      composite P(AI), controlling word count the same way Check 2 did,
+      tests where in the range the effect lives. **The result does not
+      match the hypothesis it was run to check.** The expectation going in
+      was a flat curve that rises at the top (a penalty concentrated on the
+      strongest essays). What the bins actually show: score 1 (the bottom
+      of the range, n=1,024) sits distinctly elevated at +0.063 (CI 0.046
+      to 0.082); scores 2 through 6 are all within a tight band close to
+      zero (−0.012 to +0.005) with overlapping CIs and no rising trend at
+      the top — score 6 (the best essays, n=842) is numerically the
+      *lowest* of the six bins, not the highest. Reported exactly as
+      computed, against the hypothesis rather than for it: the composite's
+      positive rank correlation with quality looks driven by the
+      lowest-scoring essays reading as unusually AI-like once word count is
+      removed, not by a penalty that concentrates on the strongest essays.
+      This does not itself explain *why* (candidates include some other
+      remaining nonlinearity in the word-count control specifically at the
+      short/incoherent end of the range, or a genuine texture difference in
+      very weak essays unrelated to AI-likeness), and n=1,024 in the
+      driving bin, while not small, is the smallest of the six — this is
+      reported as an observation, not a mechanism claim.
+    - **Stated outcome:** Check 1's retraction stands (see above). Check
+      2 is not an artifact — Gate 2's Spearman result is the correct,
+      pre-specified read, and its sign reversal under Pearson reflects a
+      real concentration of the effect in part of the quality range. But
+      the concentration is at the **bottom** of the range, not the top,
+      which is the opposite of the mechanism this bin-profile check was
+      run to confirm. Nothing here should be written up as "a penalty on
+      the strongest essays" — the data does not show that.
 
 **Verdict:** the data leans mildly toward H2 over H1 — the ordering
 prediction held, and centroid distance (a homogenization-flavored measure)
@@ -288,10 +307,21 @@ predicts TPR more strongly than dispersion does — but this experiment does
 not confirm H2 outright, since its own pre-registered dispersion-TPR test
 came in short of the threshold set for it, and n = 17 is too small to treat
 any of these correlations as decisive. The direction check argues against
-H1 as stated (weak, wrong-signed correlation with TPR across sources), but
-the follow-up discriminant/quality cosine no longer supports reading that
-as a clean near-orthogonal result once both vectors are conditioned on
-word count consistently — see the conditioning checks above. Neither
+H1 as stated (weak, wrong-signed correlation with TPR across sources); that
+test was already computed in a length-residualized space for both the
+direction vector and the projected source centroids (unlike the
+pre-correction cosine test), so it is not subject to the same retraction —
+but its outcome variable, TPR, is itself computed from the composite's
+original, non-length-residualized threshold, which the dispersion- and
+centroid-distance-vs-TPR correlations above share and which this
+amendment has not attempted to correct; a fully length-controlled TPR
+would require re-deriving a threshold from a residualized-feature
+discriminant, a larger undertaking than the checks logged here. The
+discriminant/quality cosine, once both vectors are conditioned consistently,
+is the cleanest single mechanism number this experiment produced (cosine
+0.533, 57.8°): a real, moderate — not full — alignment between what the
+composite detects and what makes human writing rate as high quality.
+Neither
 hypothesis should be reported as confirmed; this is suggestive,
 correlational evidence about model outputs, not a demonstration about what
 any lab actually trained on.

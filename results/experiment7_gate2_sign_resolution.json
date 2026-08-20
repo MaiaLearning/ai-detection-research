@@ -1,0 +1,78 @@
+{
+  "seed": 0,
+  "check1_sign_convention": {
+    "mean_p_ai_human_sample": 0.13189691540731968,
+    "mean_p_ai_ai_sample": 0.8454618168894257,
+    "sign_ok": true,
+    "note": "Cross-checked against experiment 3's full-corpus AUC=0.945 (human=0, AI=1, P(AI)=predict_proba[:,1])."
+  },
+  "check2_same_sample": {
+    "note": "results/experiment3_human_scores.csv is written from the SAME `human` dataframe and `human_scores` array Gate 2 is computed from, within experiment3_separation.py -- same rows by construction, confirmed below by recomputing Gate 2's exact statistic from that file."
+  },
+  "check3_recompute": {
+    "gate2_partial_spearman_recomputed": 0.1349832622756587,
+    "gate2_partial_spearman_original": 0.135,
+    "spearman_of_bin_plot_raw_linear_residuals_vs_quality": 0.13602878909928176,
+    "conclusion": "The bin plot's own residualized values, correlated by rank against quality, reproduce Gate 2's positive sign and magnitude. There is no contradiction in the underlying statistic -- the arithmetic-mean bin visualization in analyze_quality_bin_profile.py was misleading, not Gate 2."
+  },
+  "check4_why_means_misled": {
+    "per_bin": [
+      {
+        "holistic_essay_score": 1,
+        "n": 1024,
+        "mean_residual_p_ai": 0.06334721411113224,
+        "median_residual_p_ai": -0.07035118084103678,
+        "mean_rank_percentile": 0.5210558485867012,
+        "skew_residual_p_ai": 1.204482064393873,
+        "word_count_median": 249.0
+      },
+      {
+        "holistic_essay_score": 2,
+        "n": 5590,
+        "mean_residual_p_ai": -0.00693191832891905,
+        "median_residual_p_ai": -0.11930826067800115,
+        "mean_rank_percentile": 0.4396663823518289,
+        "skew_residual_p_ai": 1.7277652200322553,
+        "word_count_median": 229.0
+      },
+      {
+        "holistic_essay_score": 3,
+        "n": 7965,
+        "mean_residual_p_ai": -0.0019062584186246795,
+        "median_residual_p_ai": -0.10572899314608483,
+        "mean_rank_percentile": 0.48069222016972996,
+        "skew_residual_p_ai": 1.790315875793533,
+        "word_count_median": 327.0
+      },
+      {
+        "holistic_essay_score": 4,
+        "n": 6208,
+        "mean_residual_p_ai": 0.004893621314722428,
+        "median_residual_p_ai": -0.08927342298730502,
+        "mean_rank_percentile": 0.5355549053142421,
+        "skew_residual_p_ai": 1.835842575173078,
+        "word_count_median": 455.0
+      },
+      {
+        "holistic_essay_score": 5,
+        "n": 3066,
+        "mean_residual_p_ai": -0.010185240884688595,
+        "median_residual_p_ai": -0.08746842535079258,
+        "mean_rank_percentile": 0.5572982978981719,
+        "skew_residual_p_ai": 2.139012609960132,
+        "word_count_median": 625.0
+      },
+      {
+        "holistic_essay_score": 6,
+        "n": 842,
+        "mean_residual_p_ai": -0.011979130708001646,
+        "median_residual_p_ai": -0.08008566091884031,
+        "mean_rank_percentile": 0.5868037606911928,
+        "skew_residual_p_ai": 2.455460743528833,
+        "word_count_median": 824.0
+      }
+    ],
+    "note": "Residualized P(AI) is heavily right-skewed (skew 1.2-2.5) with unbalanced bin sizes (n=842-7965); arithmetic means are not robust to this and are dominated by a handful of large positive outliers, especially in smaller bins. Mean rank percentile per bin -- what Spearman reflects -- increases close to monotonically from score 2 through score 6; score 1 is a mild, partial exception (rank percentile between scores 3 and 4), not the bottom-of-range effect the mean plot appeared to show."
+  },
+  "score1_degeneracy_note": "Score-1 essays are shorter (median word count 249 vs 824 for score 6), a partial match for a length/degeneracy hypothesis. No '5.7' or similar section on degenerate feature values under broken tokenization was found anywhere in this repository (README.md, AMENDMENTS.md, PRACTITIONER_BRIEF.md, EXPERIMENT_*.md, scripts/ were checked) -- the closest existing finding here is RAID's homoglyph/zero-width-space adversarial attacks breaking tokenization (experiment 4), a different mechanism (deliberately injected unicode in AI-generated text, not naturally short human writing). If that citation is from a document outside this repository, it is not verifiable from what's here and is not repeated as fact. Score 1's own residual distribution has the LOWEST skew of the six bins (1.20 vs 2.46 for score 6), which cuts against 'score 1 is uniquely extreme' -- its elevated mean looks more like ordinary outlier leverage in a smaller bin than a distinct degeneracy regime."
+}

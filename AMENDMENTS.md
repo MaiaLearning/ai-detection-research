@@ -269,37 +269,84 @@ negative, |ρ| > 0.5).
       linear one that averages it away. Spearman was the statistic
       specified in the original plan and is the one to keep. The sign
       reversal is diagnostic, not disqualifying, of Gate 2's finding.
-    - **Where the effect is concentrated** (`scripts/analyze_quality_bin_profile.py`,
-      `results/experiment7_quality_bin_profile.csv/.png`): binning human
-      essays by their integer holistic score (1-6) and plotting mean
-      composite P(AI), controlling word count the same way Check 2 did,
-      tests where in the range the effect lives. **The result does not
-      match the hypothesis it was run to check.** The expectation going in
-      was a flat curve that rises at the top (a penalty concentrated on the
-      strongest essays). What the bins actually show: score 1 (the bottom
-      of the range, n=1,024) sits distinctly elevated at +0.063 (CI 0.046
-      to 0.082); scores 2 through 6 are all within a tight band close to
-      zero (−0.012 to +0.005) with overlapping CIs and no rising trend at
-      the top — score 6 (the best essays, n=842) is numerically the
-      *lowest* of the six bins, not the highest. Reported exactly as
-      computed, against the hypothesis rather than for it: the composite's
-      positive rank correlation with quality looks driven by the
-      lowest-scoring essays reading as unusually AI-like once word count is
-      removed, not by a penalty that concentrates on the strongest essays.
-      This does not itself explain *why* (candidates include some other
-      remaining nonlinearity in the word-count control specifically at the
-      short/incoherent end of the range, or a genuine texture difference in
-      very weak essays unrelated to AI-likeness), and n=1,024 in the
-      driving bin, while not small, is the smallest of the six — this is
-      reported as an observation, not a mechanism claim.
-    - **Stated outcome:** Check 1's retraction stands (see above). Check
-      2 is not an artifact — Gate 2's Spearman result is the correct,
-      pre-specified read, and its sign reversal under Pearson reflects a
-      real concentration of the effect in part of the quality range. But
-      the concentration is at the **bottom** of the range, not the top,
-      which is the opposite of the mechanism this bin-profile check was
-      run to confirm. Nothing here should be written up as "a penalty on
-      the strongest essays" — the data does not show that.
+    - **Where the effect is concentrated — first attempt was wrong, corrected
+      below.** `scripts/analyze_quality_bin_profile.py` binned human essays
+      by holistic score (1-6) and plotted the *arithmetic mean* of
+      word-count-residualized P(AI) per bin. That plot showed score 1
+      distinctly elevated (+0.063) and scores 2-6 flat-to-declining
+      (score 6 numerically lowest at −0.012), which was reported here as
+      "the effect is concentrated at the bottom of the range, the opposite
+      of a penalty on the strongest essays." **That reported conclusion was
+      wrong, and has been retracted** — not because Gate 2 has a bug, but
+      because the mean-per-bin visualization was misleading. See the
+      resolution below.
+    - **Resolution** (`scripts/analyze_gate2_sign_resolution.py`,
+      `results/experiment7_gate2_sign_resolution.json`,
+      `results/experiment7_quality_bin_rank_profile.png`), run because the
+      bin-mean plot appeared to contradict Gate 2's sign directly — the
+      paper's central, three-times-replicated claim — which made this the
+      first thing to resolve before anything else. Four checks:
+        1. *Sign convention:* scored 10 known-human and 10 known-AI (DAIGT)
+           essays directly through the frozen composite. Mean P(AI):
+           human 0.132, AI 0.845 — correct direction, consistent with
+           Experiment 3's full-corpus AUC = 0.945. Not the cause.
+        2. *Same sample:* `results/experiment3_human_scores.csv` is written
+           from the exact `human` dataframe and `human_scores` array Gate 2
+           uses, inside the same script run — same rows by construction,
+           not coincidence.
+        3. *Recompute Spearman on the bin plot's own residualized values:*
+           `partial_spearman` recomputed from that CSV reproduces Gate 2's
+           +0.135 exactly. A plain Spearman correlation between the bin
+           plot's own residualized P(AI) values and quality gives **+0.136**
+           — matching Gate 2, not contradicting it. **The bin plot's own
+           underlying rank relationship was positive all along; only its
+           arithmetic-mean visualization looked negative.**
+        4. *Look at the scatter, not the means:* residualized P(AI) is
+           heavily right-skewed (skew 1.2 to 2.5 across bins, a long tail of
+           essays scored much more AI-like than word count predicts), with
+           bin sizes ranging n=842 to n=7,965 — arithmetic means are not
+           robust to that combination and are dominated by a handful of
+           extreme values, especially in smaller bins. The **mean rank
+           percentile per bin** (what Spearman actually reflects) tells a
+           different, much more monotonic story: 0.440 (score 2, lowest) →
+           0.481 (3) → 0.536 (4) → 0.557 (5) → 0.587 (score 6, highest).
+           Scores 2 through 6 increase cleanly. Score 1 (0.521) sits mildly
+           out of order — between scores 3 and 4, not at either extreme —
+           rather than at the bottom the mean plot suggested.
+    - **On the score-1 "structural degeneracy" citation:** score-1 essays
+      are genuinely shorter (median word count 249 vs. 824 for score 6), a
+      partial match for a length-related hypothesis. But no "§5.7" or
+      comparable section on degenerate feature values under broken
+      tokenization was found anywhere in this repository (checked
+      `README.md`, this file, `PRACTITIONER_BRIEF.md`, every
+      `EXPERIMENT_*.md`, and `scripts/`) — the closest existing finding
+      here is RAID's homoglyph/zero-width-space *adversarial* attacks
+      breaking tokenization (item 5 / experiment 4), a different mechanism
+      (deliberately injected unicode in AI-generated text, not naturally
+      short human writing). If that citation refers to a document outside
+      this repository it cannot be verified from what's here and is not
+      repeated as fact. For what it's worth, score 1's own residual
+      distribution has the *lowest* skew of the six bins (1.20, vs. 2.46 for
+      score 6) — its elevated mean looks more like ordinary outlier
+      leverage in a smaller bin (n=1,024, the second-smallest) than a
+      distinct degeneracy regime, though this reading is not conclusive
+      either way.
+    - **Stated outcome:** Check 1 (discriminant/quality cosine, both
+      conditioned consistently) — retraction stands: real, moderate
+      alignment (cosine 0.533). Check 2 (Pearson vs. Spearman on Gate 2) —
+      not an artifact: Spearman is the correct, pre-specified read, and its
+      sign reversal under Pearson reflects a real concentration of the
+      effect in part of the quality range. The bin-profile follow-up that
+      was supposed to locate that concentration **was itself wrong on first
+      report** — its mean-based visualization suggested a bottom-of-range
+      effect that does not survive a skew-robust (rank/median) view. The
+      corrected view shows the effect rising close to monotonically from
+      score 2 through score 6, i.e. closer to a top-of-range effect than a
+      bottom-of-range one, with score 1 a mild, unresolved exception. This
+      episode is logged in full, including the wrong first conclusion,
+      because the error was in this study's own analysis, not in Gate 2 —
+      exactly the kind of mistake this log exists to surface rather than
+      quietly fix.
 
 **Verdict:** the data leans mildly toward H2 over H1 — the ordering
 prediction held, and centroid distance (a homogenization-flavored measure)
@@ -313,10 +360,12 @@ direction vector and the projected source centroids (unlike the
 pre-correction cosine test), so it is not subject to the same retraction —
 but its outcome variable, TPR, is itself computed from the composite's
 original, non-length-residualized threshold, which the dispersion- and
-centroid-distance-vs-TPR correlations above share and which this
-amendment has not attempted to correct; a fully length-controlled TPR
-would require re-deriving a threshold from a residualized-feature
-discriminant, a larger undertaking than the checks logged here. The
+centroid-distance-vs-TPR correlations above share. **Logged as a known
+limitation and deliberately not pursued further**: fixing it would mean
+re-deriving a threshold from a residualized-feature discriminant and
+rescoring all 17 sources, a larger undertaking than the checks logged
+here, for a correction to an already-exploratory (n=17) section the
+writeup will report as unresolved either way. The
 discriminant/quality cosine, once both vectors are conditioned consistently,
 is the cleanest single mechanism number this experiment produced (cosine
 0.533, 57.8°): a real, moderate — not full — alignment between what the

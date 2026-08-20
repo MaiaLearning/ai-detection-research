@@ -5,9 +5,10 @@ measure of student essays can honestly support a user-facing AI-detection or
 quality panel in MaiaLearning's essay review feature. Full background,
 methodology, and hard constraints are in [`CLAUDE.md`](CLAUDE.md); the
 experimental design is in [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md) and the
-`EXPERIMENT_5.md` / `EXPERIMENT_6.md` design docs. The white paper (not yet
-in this repo — see below) is the primary write-up; this repository exists so
-every number in it can be independently reproduced.
+`EXPERIMENT_5.md` / `EXPERIMENT_6.md` design docs. The practitioner-facing
+write-up is [`PRACTITIONER_BRIEF.md`](PRACTITIONER_BRIEF.md)
+([PDF](PRACTITIONER_BRIEF.pdf)) — that's the primary document; this
+repository exists so every number in it can be independently reproduced.
 
 `RESEARCH_PLAN.md` was pre-registered before any data was collected (see
 the note at its top); [`AMENDMENTS.md`](AMENDMENTS.md) logs every
@@ -30,8 +31,10 @@ they weren't, and that document says so plainly.
 | 6 — features carry quality above word count? | **NO** — M1−M0 delta ρ = **−0.079** (CI −0.086 to −0.072), replicated on a held-out set |
 | 5 — vendor vs. prompting-effort confound | Shelved: DAIGT's real generation prompts turned out to be unscaffolded, dissolving the premise |
 
-Net: this study does not support shipping a scoring panel of this design.
-See the white paper for the full argument and caveats.
+Net: this study does not support shipping a scoring panel of this design —
+the panel was shipped, evaluated, and is being withdrawn. See
+[`PRACTITIONER_BRIEF.md`](PRACTITIONER_BRIEF.md) for the full argument,
+recommendations, and caveats.
 
 ## Repository layout
 
@@ -46,6 +49,7 @@ RESEARCH_PLAN.md       Original experimental design (experiments 1-4), pre-regis
 EXPERIMENT_5.md        Design doc for the prompting-effort experiment (shelved)
 EXPERIMENT_6.md        Design doc for the quality-composite + verification-harness experiment
 AMENDMENTS.md          Log of every consequential decision made or changed mid-study, with reasoning
+PRACTITIONER_BRIEF.md  The practitioner-facing write-up (also available as PRACTITIONER_BRIEF.pdf)
 ```
 
 ## A note on this repository's history
@@ -167,7 +171,8 @@ and produces real API spend; it does not bear on the study's conclusions.
 ## License
 
 Source code (`src/`, `scripts/`, `tests/`) is MIT-licensed — see
-[`LICENSE`](LICENSE). Written content (white paper, this README, `CLAUDE.md`,
-`RESEARCH_PLAN.md`, the experiment design docs, and `results/`) is licensed
+[`LICENSE`](LICENSE). Written content (`PRACTITIONER_BRIEF.md`/`.pdf`, this
+README, `CLAUDE.md`, `RESEARCH_PLAN.md`, `AMENDMENTS.md`, the experiment
+design docs, and `results/`) is licensed
 CC BY 4.0 — see [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md). Neither license
 covers the third-party data corpora — see **Data licensing** above.

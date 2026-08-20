@@ -29,14 +29,22 @@ wrote about), just not with one single set common to all 18 groups at
 once. The strict 2-prompt cut is also computed and reported separately as
 a small-n robustness check.
 
+Also computes a direct, single-number follow-up to the source-level
+direction check: cosine similarity between the frozen composite's own
+P(AI) discriminant coefficient vector and the human-mean-to-top-quality-
+quartile vector, both expressed in the composite's own StandardScaler
+space (requires results/experiment3_frozen_composite.joblib to exist).
+
 Usage: uv run python scripts/experiment7_dispersion.py
 Output: results/experiment7_dispersion.csv, results/experiment7_per_feature_sd.csv,
-        results/experiment7_manifest.json, results/experiment7_dispersion_vs_tpr.png,
+        results/experiment7_manifest.json (includes the discriminant/quality
+        cosine similarity), results/experiment7_dispersion_vs_tpr.png,
         results/experiment7_feature_sd_heatmap.png
 """
 import json
 from pathlib import Path
 
+import joblib
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
@@ -46,6 +54,7 @@ from src import features as feat
 from src.data import load_and_clean
 from src.dispersion import (
     centroid,
+    cosine_similarity,
     covariance_determinant,
     covariance_trace,
     mean_distance_to_centroid,
@@ -59,6 +68,7 @@ DAIGT_PATH = Path("data/train_v2_drcat_02.csv")
 BEDROCK_PATH = Path("data/bedrock_claude_essays.csv")
 OPENAI_PATH = Path("data/openai_gpt56terra_essays.csv")
 TPR_PATH = Path("results/experiment3_tpr_by_model.csv")
+FROZEN_COMPOSITE_PATH = Path("results/experiment3_frozen_composite.joblib")
 RESULTS_DIR = Path("results")
 
 SEED = 42
@@ -260,6 +270,33 @@ def main():
     )
     print(f"Spearman rho(projection_toward_high_quality, TPR): {rho_proj:.3f} ({proj_lo:.3f}, {proj_hi:.3f})")
 
+    # --- Discriminant-direction vs quality-direction angle ---
+    # A direct, single-number test of the same question the direction check
+    # above asks indirectly: does the composite's own P(AI) discriminant
+    # axis point toward higher human-rated quality? Both vectors must live
+    # in the SAME standardized space to make cosine similarity meaningful --
+    # here that's the frozen composite's own StandardScaler space (fit on
+    # its pooled human+AI training data in experiment 3), NOT the
+    # human-referenced/length-residualized space used elsewhere in this
+    # script. The discriminant vector only has a well-defined direction in
+    # the space it was fit in, so the quality vector is transformed into
+    # that same space rather than the other way around.
+    composite = joblib.load(FROZEN_COMPOSITE_PATH)  # our own artifact from experiment3_separation.py, not external/untrusted
+    assert composite["feature_names"] == feature_names, (
+        "Frozen composite's feature order doesn't match this script's -- "
+        "cosine similarity would silently compare mismatched axes."
+    )
+    discriminant_vec = composite["model"].coef_[0]
+    human_centroid_all_raw = human_feats_raw.mean(axis=0)
+    human_centroid_highq_raw = human_feats_raw[high_quality_mask].mean(axis=0)
+    quality_vec_composite_space = (human_centroid_highq_raw - human_centroid_all_raw) / composite["scaler"].scale_
+    discriminant_quality_cosine = cosine_similarity(discriminant_vec, quality_vec_composite_space)
+    discriminant_quality_angle_deg = float(np.degrees(np.arccos(np.clip(discriminant_quality_cosine, -1.0, 1.0))))
+    print(f"\nCosine similarity, discriminant direction (P(AI) coefficients) vs "
+          f"human-mean-to-top-quality-quartile vector (both in the frozen composite's "
+          f"own standardized space): {discriminant_quality_cosine:.3f} "
+          f"(angle = {discriminant_quality_angle_deg:.1f} degrees)")
+
     # --- Human subgroup dispersion (quality quartiles, ELL) ---
     q25 = np.quantile(quality, 0.25)
     subgroup_masks = {
@@ -334,6 +371,26 @@ def main():
         "correlation_prediction_held": bool(correlation_held),
         "correlation_centroid_distance_tpr": {"rho": rho_cdist, "ci_low": cdist_lo, "ci_high": cdist_hi},
         "correlation_projection_toward_quality_tpr": {"rho": rho_proj, "ci_low": proj_lo, "ci_high": proj_hi},
+        "discriminant_quality_angle": {
+            "cosine_similarity": discriminant_quality_cosine,
+            "angle_degrees": discriminant_quality_angle_deg,
+            "note": (
+                "Cosine similarity between the frozen composite's P(AI) "
+                "discriminant coefficient vector and the human-mean-to-"
+                "top-quality-quartile vector, both expressed in the "
+                "composite's own StandardScaler space (fit on its pooled "
+                "human+AI training data in experiment 3) -- not the "
+                "human-referenced/length-residualized space used for "
+                "dispersion elsewhere in this script, since the "
+                "discriminant vector is only meaningful in the space it "
+                "was fit in. Added post hoc to quantify, rather than "
+                "infer from a source-level correlation, whether the "
+                "composite's own discriminant axis points toward higher "
+                "human-rated quality -- this is what Experiment 2's "
+                "positive partial correlation (+0.135) implies "
+                "geometrically."
+            ),
+        },
         "joint_regression_tpr_on_dispersion_and_centroid_distance": {
             "coef_dispersion": float(joint_model.coef_[0]), "coef_centroid_distance": float(joint_model.coef_[1]),
             "intercept": float(joint_model.intercept_), "r2": float(joint_r2),

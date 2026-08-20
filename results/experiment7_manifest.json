@@ -27,6 +27,11 @@
     "ci_low": -0.6138994668697639,
     "ci_high": 0.28839370562915756
   },
+  "discriminant_quality_angle": {
+    "cosine_similarity": 0.0670290897421037,
+    "angle_degrees": 86.15663440557027,
+    "note": "Cosine similarity between the frozen composite's P(AI) discriminant coefficient vector and the human-mean-to-top-quality-quartile vector, both expressed in the composite's own StandardScaler space (fit on its pooled human+AI training data in experiment 3) -- not the human-referenced/length-residualized space used for dispersion elsewhere in this script, since the discriminant vector is only meaningful in the space it was fit in. Added post hoc to quantify, rather than infer from a source-level correlation, whether the composite's own discriminant axis points toward higher human-rated quality -- this is what Experiment 2's positive partial correlation (+0.135) implies geometrically."
+  },
   "joint_regression_tpr_on_dispersion_and_centroid_distance": {
     "coef_dispersion": -0.1067141475241916,
     "coef_centroid_distance": 0.13016983817587024,

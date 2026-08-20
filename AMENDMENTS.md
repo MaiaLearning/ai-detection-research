@@ -194,16 +194,42 @@ negative, |ρ| > 0.5).
   n = 12-18 there), gives a materially different correlation (ρ = 0.199) —
   reported in `results/experiment7_strict_common_prompt_check.csv` as an
   exploratory, small-n check, not as evidence against the primary result.
+- A follow-up, added after the above was first written up: rather than
+  inferring the discriminant-vs-quality relationship from a 17-source
+  correlation, compute it directly as one number. The frozen composite's
+  own P(AI) discriminant coefficient vector and the human-mean-to-top-
+  quality-quartile vector were compared by cosine similarity, both
+  expressed in the composite's own `StandardScaler` space (the only space
+  the discriminant vector is meaningful in) — **cosine = 0.067, angle =
+  86.2°**. This is small and positive exactly as predicted, but "small and
+  positive" here means *close to orthogonal*: for two random vectors in
+  9 dimensions, the expected cosine similarity is 0 with a standard
+  deviation of roughly 1/√9 ≈ 0.33, so 0.067 sits well inside the range
+  produced by chance alone. It does not support reading the composite's
+  AI-detection axis as pointed toward the same direction as human-rated
+  quality. This is not a contradiction of Experiment 2's positive partial
+  correlation (+0.135, partialling out length) between the composite's
+  P(AI) score and quality — that correlation is real and reproducible —
+  but it means the *coarse* quality direction used here (top quartile
+  centroid minus overall centroid) is not the same direction the
+  discriminant weights, and the two experiments' positive-correlation and
+  near-orthogonal-vector results should not be described as the same
+  finding measured two ways. (No CI is reported on the angle itself: it is
+  a fixed geometric quantity between two vectors, not a sampled statistic;
+  human n = 24,695 makes the quality-quartile centroid a stable estimate.)
 
 **Verdict:** the data leans mildly toward H2 over H1 — the ordering
 prediction held, and centroid distance (a homogenization-flavored measure)
 predicts TPR more strongly than dispersion does — but this experiment does
 not confirm H2 outright, since its own pre-registered dispersion-TPR test
 came in short of the threshold set for it, and n = 17 is too small to treat
-any of these correlations as decisive. The direction check argues against
-H1 as stated. Neither hypothesis should be reported as confirmed; this is
-suggestive, correlational evidence about model outputs, not a demonstration
-about what any lab actually trained on.
+any of these correlations as decisive. The direction check, and its
+direct-measurement follow-up (the near-orthogonal discriminant/quality
+cosine above), both argue against H1 as stated: whatever the composite's
+discriminant axis is picking up, it is not well described as "the same
+direction as human-rated quality." Neither hypothesis should be reported as
+confirmed; this is suggestive, correlational evidence about model outputs,
+not a demonstration about what any lab actually trained on.
 
 ## On this repository's single commit
 

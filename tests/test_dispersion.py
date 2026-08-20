@@ -6,6 +6,7 @@ import pytest
 
 from src.dispersion import (
     centroid,
+    cosine_similarity,
     covariance_determinant,
     covariance_trace,
     mean_distance_to_centroid,
@@ -69,3 +70,21 @@ def test_project_onto_vector_normalizes_direction():
     direction = np.array([2.0, 0.0])  # non-unit vector, same direction as above
     point = np.array([3.0, 5.0])
     assert project_onto_vector(point, origin, direction) == pytest.approx(3.0)
+
+
+def test_cosine_similarity_identical_direction_is_one():
+    a = np.array([1.0, 2.0, 3.0])
+    b = np.array([2.0, 4.0, 6.0])  # same direction, different magnitude
+    assert cosine_similarity(a, b) == pytest.approx(1.0)
+
+
+def test_cosine_similarity_orthogonal_is_zero():
+    a = np.array([1.0, 0.0])
+    b = np.array([0.0, 1.0])
+    assert cosine_similarity(a, b) == pytest.approx(0.0)
+
+
+def test_cosine_similarity_opposite_direction_is_negative_one():
+    a = np.array([1.0, 2.0, 3.0])
+    b = np.array([-1.0, -2.0, -3.0])
+    assert cosine_similarity(a, b) == pytest.approx(-1.0)

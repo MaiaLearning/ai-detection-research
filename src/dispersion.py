@@ -36,3 +36,11 @@ def project_onto_vector(point: np.ndarray, origin: np.ndarray, direction: np.nda
     normalized internally -- so callers can pass any non-unit vector."""
     unit = direction / np.linalg.norm(direction)
     return float(np.dot(point - origin, unit))
+
+
+def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
+    """cos(angle) between two vectors. Both must already be expressed in the
+    same coordinate space -- cosine similarity is not invariant to per-axis
+    rescaling, so standardizing a and b with different scalers before
+    calling this would silently produce a meaningless angle."""
+    return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))

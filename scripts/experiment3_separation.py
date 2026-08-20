@@ -30,7 +30,7 @@ prediction the model was trained on.
 
 AI corpus: DAIGT-v2 (`thedrcat/daigt-v2-train-dataset`), label==1 rows,
 excluding the small `train_essays` source (a handful of mislabeled rows).
-This is 14 generating models, including ~2,000 already-existing Claude
+This is 15 generating models (source labels), including ~2,000 already-existing Claude
 generations (darragh_claude_v6/v7) — but NOT yet the plan's separately-
 called-for fresh Bedrock-generated set matched to production's current
 Claude model and prompts ("no other corpus covers our own generator").
@@ -252,7 +252,7 @@ def main():
         "seed": SEED, "n_bootstrap": N_BOOT, "target_fpr": TARGET_FPR,
         "features_used": list(FEATURE_FUNCS.keys()),
         "note_ai_corpus_scope": (
-            "DAIGT-v2 (14 models) plus two fresh 1000-essay matched sets generated "
+            "DAIGT-v2 (15 models) plus two fresh 1000-essay matched sets generated "
             "on the identical PERSUADE-prompt instructions (src/essay_prompts.py): "
             "us.anthropic.claude-sonnet-5 via Bedrock, and gpt-5.6-terra via the "
             "OpenAI API (user-directed addition, chosen as a proxy for free-tier "

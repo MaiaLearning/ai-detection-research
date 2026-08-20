@@ -24,17 +24,17 @@ At 1% FPR the detector achieves 41.3% true positive rate against 17 generator so
 
 ## 1. Introduction
 
-Detectors of machine-generated text are widely deployed in education, and their error properties are contested. Liang et al. (2023) found that perplexity-based detectors misclassify a majority of TOEFL essays by non-native writers as machine-generated while remaining near-perfect on essays by US-born eighth-graders, and attributed this to lower perplexity arising from reduced linguistic variability. Turnitin disputed the methodology, citing short texts and small samples, and noting their own detector was not among those tested (Turnitin, 2023).
+Detectors of machine-generated text are widely deployed in education, and their error properties are contested. Liang et al. (2023) found that perplexity-based detectors misclassify a majority of TOEFL essays by non-native writers as machine-generated while remaining near-perfect on essays by US-born eighth-graders, and attributed this to lower perplexity arising from reduced linguistic variability; the sample was 91 essays under 150 words each. Turnitin (2023) published a follow-up study testing its own detector, not among those Liang et al. evaluated, on a much larger sample of authentic student essays, and found no statistically significant ELL bias in its system. [Traced before shipping, per direction: an earlier draft attributed a stronger claim to Turnitin — that it "disputed the methodology, citing short texts and small samples" — which this search could not confirm as Turnitin's own argument. That specific critique (small sample, other methodological flaws, and noting that its own detector was untested by Liang et al.) traces instead to a blog post by a different AI-detection vendor, Pangram, about its own product being excluded — not to Turnitin, and not to a peer-reviewed source. Per this study's evidentiary standard (`CLAUDE.md`: vendor claims are marketing, not evidence), that critique is not repeated here in either document; only Liang et al.'s own stated sample size, and Turnitin's own, separately verified finding, are reported.]
 
 We approached the question as practitioners rather than as critics. MaiaLearning deployed an AI-detection panel in a commercial college-essay review product. A scheduled audit of that feature's *output appropriateness* — distinct from monitoring its performance — found that the guidance it issued to students appeared to advise writing badly. This paper is the investigation that followed, and the evidence on which the feature was withdrawn.
 
 **Contributions.**
 
-1. **A quality–detection inversion.** On 24,695 human essays with holistic scores, detector score correlates positively with quality. To our knowledge this connection between detector features and independently-rated writing quality has not previously been measured, despite both feature families being well-studied in isolation (§2, §5.2) [FLAGGED: cited "§3.2" in the current text, but §3 (Data) has no subsections — corrected here to §2, which is where the AES/detection literature gap is actually discussed ("The gap we address"); §5.2 is correct as-is.].
+1. **A quality–detection inversion.** On 24,695 human essays with holistic scores, detector score correlates positively with quality. To our knowledge this connection between detector features and independently-rated writing quality has not previously been measured, despite both feature families being well-studied in isolation (§2, §5.2). [Corrected from an earlier draft's "§3.2," which does not exist — §3 (Data) has no subsections; the AES/detection literature gap this sentence refers to is discussed in §2, "The gap we address."]
 2. **A quantified genre-transfer failure.** A calibration ladder from 1% to 36.9% FPR on human writing under a fixed threshold (§5.4).
 3. **A topic-invariant ELL penalty**, replicated across corpora, with a 2×2 test excluding topic novelty as the mechanism (§5.5).
 4. **An inverted capability gradient.** Current frontier models were the *most* detectable of 17 sources; open-weight and older models the least (§5.6).
-5. **A methodological negative result** on DAIGT-v2, a widely-used detection benchmark: its constituent generations carry no prompting-effort scaffolding, contrary to common assumption (§6 [FLAGGED: cited here and at its other occurrence, in §6 item 2, as "§5.7" — but §5.7's actual heading is "Adversarial robustness, and a benchmark artifact" (RAID/unicode), an unrelated finding. The DAIGT-scaffolding result has no numbered §5 subsection of its own; it appears only in §6 and `AMENDMENTS.md` item 4. Both citations need correcting to §6, or the finding needs its own §5 subsection.]).
+5. **A methodological negative result** on DAIGT-v2, a widely-used detection benchmark: its constituent generations carry no prompting-effort scaffolding, contrary to common assumption (§5.7; also §6).
 6. **A deployment-process finding**: the defect was invisible to performance metrics and surfaced only through appropriateness review (§7.3).
 
 We pre-registered gate thresholds before data collection and report the predictions that failed (§6).
@@ -60,15 +60,15 @@ We pre-registered gate thresholds before data collection and report the predicti
 | Corpus | Role | n (used) | Key annotations |
 |---|---|---|---|
 | PERSUADE 2.0 | Human reference, calibration genre | 24,695 | Holistic quality score, ELL flag, grade, prompt |
-| DAIGT-v2 | Machine-generated, 15 sources [FLAGGED: table and §5.2/§3.2 text say "14"; the manifest lists 15 distinct DAIGT source labels used here (excludes our own Bedrock/OpenAI generations) — see note below table] | 17,492 [RESOLVED] | Generator identity |
+| DAIGT-v2 | Machine-generated, 15 sources | 17,492 | Generator identity |
 | Bedrock generations | Machine, current Claude | 1,000 | Prompt, model ID |
 | OpenAI generations | Machine, current GPT | 1,000 | Prompt, model ID |
 | ELLIPSE | Near-genre human, all ELL | 6,482 | Proficiency ratings, prompt |
 | RAID (abstracts subset) | Far-genre human + adversarial | 493 human | Attack type, generator |
 
-**PERSUADE 2.0** comprises argumentative essays by US students in grades 6–12, collected before the release of ChatGPT, making human authorship reliable. It carries holistic quality scores and demographic annotations including ELL status. [RESOLVED] Filtering criteria (`src/data.py::load_and_clean`), applied identically by every script in this study: of 25,996 raw rows, a row is kept only if all of `ell_status` (recoded to a clean Yes/No flag, dropping any other value), `grade_level`, `holistic_essay_score`, `word_count`, `prompt_name`, and `full_text` are non-null. This drops 1,301 rows (5.0%), leaving n = 24,695 (2,244 ELL, 22,451 non-ELL). No length or other content filter is applied to the human corpus.
+**PERSUADE 2.0** comprises argumentative essays by US students in grades 6–12, collected before the release of ChatGPT, making human authorship reliable. It carries holistic quality scores and demographic annotations including ELL status. Filtering criteria (`src/data.py::load_and_clean`), applied identically by every script in this study: of 25,996 raw rows, a row is kept only if all of `ell_status` (recoded to a clean Yes/No flag, dropping any other value), `grade_level`, `holistic_essay_score`, `word_count`, `prompt_name`, and `full_text` are non-null. This drops 1,301 rows (5.0%), leaving n = 24,695 (2,244 ELL, 22,451 non-ELL). No length or other content filter is applied to the human corpus.
 
-[FLAGGED — not a [VERIFY] item, found while resolving the one above: DAIGT-v2's own generator-source column contains 15 distinct labels in the corpus subset used here (`NousResearch/Llama-2-7b-chat-hf`, `chat_gpt_moth`, `cohere-command`, `darragh_claude_v6`, `darragh_claude_v7`, `falcon_180b_v1`, `kingki19_palm`, `llama2_chat`, `llama_70b_v1`, `mistral7binstruct_v1`, `mistral7binstruct_v2`, `mistralai/Mistral-7B-Instruct-v0.1`, `palm-text-bison1`, `radek_500`, `radekgpt4`), not 14 as stated in the Data table above, the Contributions list ("14 DAIGT sources; +Claude; +GPT," §... near the abstract), and `scripts/experiment3_separation.py`'s own docstring. This is a genuine miscount that predates this report — it isn't a transcription slip introduced here — and appears in at least three places. Needs an authorial decision: correct all three instances to 15, or, if "14" was intended to mean distinct model *families* rather than distinct dataset source-labels (e.g. treating `darragh_claude_v6`/`darragh_claude_v7` as one "Claude" family), state that grouping explicitly, since it doesn't match the corpus's own source cardinality.]
+**DAIGT-v2's generator-source column contains 15 distinct labels** in the subset used here — `NousResearch/Llama-2-7b-chat-hf`, `chat_gpt_moth`, `cohere-command`, `darragh_claude_v6`, `darragh_claude_v7`, `falcon_180b_v1`, `kingki19_palm`, `llama2_chat`, `llama_70b_v1`, `mistral7binstruct_v1`, `mistral7binstruct_v2`, `mistralai/Mistral-7B-Instruct-v0.1`, `palm-text-bison1`, `radek_500`, `radekgpt4` — not 14 as earlier drafts of this report and its underlying script's docstring stated; corrected throughout. Together with our own Bedrock and OpenAI generations (1 source each), this gives the 17 generator sources cited in the abstract, §5.3, and §6 (15 + 2 = 17; verified against `results/experiment3_manifest.json`'s `ai_sources` list directly, not re-derived from the corrected count by arithmetic that could itself be wrong).
 
 **Generated sets.** We generated 1,000 essays with `us.anthropic.claude-sonnet-5` via AWS Bedrock ($8.97) and 1,000 with `gpt-5.6-terra` via the OpenAI API, both on PERSUADE prompts at temperature 1.0. Two limitations are logged: the generation prompt was generic rather than production's system prompt, and for the seven text-dependent PERSUADE prompts the models wrote from general knowledge, since the corpus carries citations but not source article text.
 
@@ -86,11 +86,17 @@ Nine deterministic features, computed in pure Python with no model dependency, n
 
 We compute both raw TTR and MTLD deliberately: raw TTR is length-confounded, and the divergence between them is informative (§5.2). [RESOLVED] The transition-phrase lexicon (`src/features.py::TRANSITION_PHRASES`) is a fixed, self-authored list of 34 discourse markers (e.g. "on the other hand," "for example," "therefore," "furthermore," "first"/"second"/"third"), matched as whole-word/whole-phrase regex patterns against lowercased text; it is not adapted from an external published list, and the code cites no source for it.
 
-### 4.2 Composite
+### 4.2 Models
 
-[RESOLVED] `StandardScaler` + `LogisticRegression` (scikit-learn defaults except `max_iter=1000`; no hyperparameter search), fit on all nine features with none pre-dropped, seed = 42. All reported scores are out-of-fold, 5-fold stratified CV (`StratifiedKFold(n_splits=5, shuffle=True, random_state=42)`).
+This study fits two separate models on two separate questions; neither's methodology should be read onto the other.
 
-[FLAGGED — the second sentence does not describe this model.] "Feature-dropping decisions were made on dev; reported figures are held-out" is not true of the detection composite above: it uses all 9 features (none dropped) and a pure 5-fold CV design with no dev/held-out split at all. That sentence describes a *different* model — the RidgeCV quality-prediction model in §5.8 (`scripts/experiment6_quality_composite.py`), which does drop raw `type_token_ratio` (using 8 of the 9 features) and does use an 80/20 dev/held-out split (dev n=19,756, held-out n=4,939, stratified by ELL status, seed 42). §4.2 appears to have merged the two models' methodology sections. Needs a rewrite that either (a) states §4.2 is about the detection composite only and moves the dropped-sentence to §5.8, or (b) splits §4.2 into two subsections, one per model.
+#### 4.2.1 The detection composite (§5.1–5.6, §5.8)
+
+`StandardScaler` + `LogisticRegression` (scikit-learn defaults except `max_iter=1000`; no hyperparameter search), fit on all nine features with none pre-dropped, seed = 42. All reported scores are out-of-fold, 5-fold stratified CV (`StratifiedKFold(n_splits=5, shuffle=True, random_state=42)`). There is no dev/held-out split for this model — every gate, AUC, and TPR figure in §5.1–5.6 and §5.8 is a cross-validated out-of-fold prediction, not a held-out-set evaluation. (§5.7 is a corpus/prompting-methodology finding about DAIGT-v2 itself; it does not use either model in this section.)
+
+#### 4.2.2 The quality-prediction model (§5.9)
+
+A separate question — do the nine features carry essay-quality signal beyond word count? — uses a different model with a different validation design: `RidgeCV` (re-tuning its regularization strength inside each fold), fit on **8** of the 9 features (raw `type_token_ratio` dropped; rationale in §5.9) plus word count. Split into DEV (80%, n=19,756) and a genuinely untouched HELD-OUT set (20%, n=4,939), stratified by ELL status, seed 42. Feature-dropping and all other modeling decisions were made using DEV only; the incremental-signal figures reported in §5.9 are confirmed once on HELD-OUT, not used for any tuning or selection decision.
 
 ### 4.3 Pre-registered gates
 
@@ -147,7 +153,7 @@ Word count alone correlates with holistic score at ρ = 0.76, dominating raw ass
 
 Two observations. Raw sign is misleading: `transition_phrase_rate` and `sentence_length_std` have opposite raw signs but the *same* directional effect once each is oriented by its coefficient in the composite, since high transition density is an AI-like signal while high burstiness is a human-like one. Both therefore push better essays toward "machine." And raw TTR fails while MTLD, its length-normalised sibling, does not — residual length confounding survives rank-partial correlation, and the length-corrected measure behaves differently.
 
-The composite figure was stable at ρ = +0.135 across three rebuilds with different AI-class compositions (15 DAIGT sources [FLAGGED: see the source-count note in §3]; +Claude; +GPT). It is a property of the features' relationship to human writing quality, not of what is being detected.
+The composite figure was stable at ρ = +0.135 across three rebuilds with different AI-class compositions (15 DAIGT sources; +Claude; +GPT). It is a property of the features' relationship to human writing quality, not of what is being detected.
 
 ### 5.3 Separation performance
 
@@ -211,7 +217,15 @@ Confound to note: both top sources are reasoning-trained. Frontier capability an
 
 Within-Claude, TPR on text-independent prompts (75.5%) vs text-dependent (70.1%) differs by 5.4pp, CI [−0.1, 11.2] — not distinguishable from zero, and in the opposite direction to the confound hypothesis it was run to test.
 
-### 5.7 Adversarial robustness, and a benchmark artifact
+### 5.7 DAIGT-v2 carries no prompting-effort scaffolding
+
+A premise behind interpreting §5.6's gradient was that DAIGT-v2's contributed generations might be more "deliberately student-like" than our own generic PERSUADE-prompt generations, confounding vendor identity with prompting effort. We pre-registered testing this via a matched prompting-effort ladder (L0 naive, L1 verbatim task, L2 "DAIGT-replicated," L3 adversarial paraphrase) before generating anything, per this study's own sourcing constraint: do not compose a level's prompt from assumption — trace what was actually done, and if a level can't be sourced, say so and stop rather than invent it (`EXPERIMENT_5.md`).
+
+Tracing DAIGT-v2's documented generation methodology across five of its constituent source datasets — darraghdog's Claude set (via its linked discussion thread and raw CSV), `chat_gpt_moth`, `radek1`, nbroad's Llama/Falcon set, and kingki19's PaLM set (including its linked Colab notebook containing the actual prompt-construction code) — found that **no contributor used anything beyond an L1-equivalent prompt**: the raw or lightly-wrapped assignment text, with no persona, word-count target, or student-voice instruction anywhere. The premised L2 condition does not exist in the source data.
+
+This is itself a finding, not merely a blocker to the experiment it was meant to enable: the assumption that DAIGT contributors "deliberately constructed student-like text" while our own prompting was comparatively generic does not hold up. It weakens, rather than resolves, the vendor-vs-prompting-effort confound in §5.6 — we cannot rule out that a more deliberately-scaffolded prompt would shift any source's detectability, only that DAIGT-v2's own generations do not represent that condition. The reduced experiment (L0, L1, L3 only, sourcing L3 from Lu et al. 2024) was piloted but not carried to a reported conclusion once §5.2's result made the underlying vendor-vs-effort question moot for this paper's argument — the composite fails Gate 2 at the composite level regardless of which vendor is behind any given source; see `AMENDMENTS.md` item 4 for the full trace, including which datasets and links were checked.
+
+### 5.8 Adversarial robustness, and a benchmark artifact
 
 On RAID (llama-chat, n = 107 per attack; note these figures sit at a domain-mismatched operating point per §5.4 and are directional only):
 
@@ -228,9 +242,9 @@ On RAID (llama-chat, n = 107 per attack; note these figures sit at a domain-mism
 
 This has a deployment implication beyond adversarial framing. Zero-width characters and homoglyphs enter student documents *accidentally* — via web paste, PDF extraction, or a collaborator's editor. A detector whose feature extraction is not unicode-normalised can therefore flag a student for characters they never typed. We recommend normalisation before feature extraction as a hardening step and note this as a false-positive mechanism absent from the literature.
 
-### 5.8 The features do not carry quality either
+### 5.9 The features do not carry quality either
 
-Nested models predicting holistic score: M0 = word count; M1 = word count + 8 features [FLAGGED: this and the next figure both say "9 features" in the current text, but `scripts/experiment6_quality_composite.py` drops raw `type_token_ratio` for this comparison — "residual length confound per Experiment 2's partial-correlation gate" — leaving 8 of the 9 Tier-1 features. Corrected to 8 here; the M0/M1/M2 figures below are computed on that 8-feature set, not 9.]; M2 = 8 features alone, no word count.
+Nested models predicting holistic score: M0 = word count; M1 = word count + 8 features; M2 = 8 features alone, no word count. [Corrected from an earlier draft, which said "9 features" in both places.] Raw `type_token_ratio` is dropped for this comparison, leaving 8 of the 9 Tier-1 features — a decision carried over directly from §5.2's finding: raw TTR's partial correlation with quality does not fully scrub a residual length confound the way MTLD, its length-normalized sibling, does. Feeding raw TTR into a quality model would risk crediting the features with predictive power that is actually leftover word-count signal leaking through an imperfectly-controlled feature, which is exactly the failure mode this section exists to rule out.
 
 [RESOLVED] Absolute figures (RidgeCV, dev n=19,756, 5-fold CV within dev; held-out n=4,939 scored once, not shown below):
 
@@ -251,9 +265,9 @@ This closes a secondary hypothesis: that features unusable for detection might s
 We pre-registered gates and directional expectations before data collection. Four expectations failed:
 
 1. **Current Claude would be difficult to detect.** It was the second-most detectable of 17 sources (§5.6).
-2. **DAIGT contributors used elaborate student-simulating prompt scaffolding.** Tracing five constituent source datasets — including a contributor's published generation notebook — found all are essentially raw-assignment prompting. The prompting-effort experiment premised on this was shelved (see the flagged cross-reference at this finding's other citation, in the Contributions list; `EXPERIMENT_5.md`).
+2. **DAIGT contributors used elaborate student-simulating prompt scaffolding.** Tracing five constituent source datasets — including a contributor's published generation notebook — found all are essentially raw-assignment prompting. The prompting-effort experiment premised on this was shelved (§5.7; `EXPERIMENT_5.md`).
 3. **ELL status and genre shift would compound.** They did not (§5.5).
-4. **The features would carry ~0.2–0.3 incremental quality signal.** The delta was negative (§5.8).
+4. **The features would carry ~0.2–0.3 incremental quality signal.** The delta was negative (§5.9).
 
 We also record two pre-registration defects. Gate 2 was specified without a numeric threshold, unlike gate 1 — so its "failure" rests on a CI excluding zero rather than on a magnitude fixed in advance, which is weaker than we intended. And gate 2 was initially written per-feature rather than on the composite. Both are documented in `AMENDMENTS.md`.
 
@@ -291,7 +305,7 @@ Cryptographic and statistical provenance marking by model providers avoids the f
 
 **We did not evaluate commercial detectors.** Turnitin's and GPTZero's classifiers are proprietary. We constrain the method, not any vendor's implementation. A vendor may have addressed these problems; none has published evidence of doing so.
 
-**Single-generator adversarial evidence.** §5.7 rests on llama-chat, at a domain-mismatched operating point.
+**Single-generator adversarial evidence.** §5.8 rests on llama-chat, at a domain-mismatched operating point.
 
 **ELLIPSE is a proficiency-assessment instrument**, not classroom writing, which may explain its elevated FPR relative to PERSUADE's ELL subset. Neither is admissions writing, and we cannot say which is closer.
 
@@ -315,7 +329,9 @@ Casal, E. J., & Lee, J. J. (2019). Syntactic complexity and writing quality in a
 
 Crossley, S. A. (2020). Linguistic features in writing quality and development: An overview. *Journal of Writing Research*, 11(3), 415–443. https://doi.org/10.17239/jowr-2020.11.03.01
 
-Crossley, S. A., Baffour, P., Benner, M., Boser, U., Franklin, A., & Tian, Y. (2024). A large-scale corpus for assessing written argumentation: PERSUADE 2.0. *Assessing Writing*, 61, Article 100865. https://doi.org/10.1016/j.asw.2024.100865 [FLAGGED — corrected from what was drafted: the entry read "Crossley, S. A., et al. (2022). The PERSUADE corpus," which is PERSUADE **1.0** (Crossley, Baffour, Tian, Picou, Benner, & Boser, 2022, *Assessing Writing* 54, Article 100667, https://doi.org/10.1016/j.asw.2022.100667) — a real, correctly-dated paper, but not the corpus version this study uses. This study downloads Kaggle's `persaude-corpus-2` and depends on holistic scores and ELL annotation, which PERSUADE 2.0 (2024) added; 1.0 (2022) is the precursor without them. Cite the 2.0 (2024) entry above as primary; keep 1.0 only as a secondary reference if the intent is to credit the corpus's full lineage.]
+Crossley, S. A., Baffour, P., Benner, M., Boser, U., Franklin, A., & Tian, Y. (2024). A large-scale corpus for assessing written argumentation: PERSUADE 2.0. *Assessing Writing*, 61, Article 100865. https://doi.org/10.1016/j.asw.2024.100865 [Primary corpus citation — corrected from an earlier draft that cited only the 1.0 paper below; this study depends on the holistic scores and ELL annotation that 2.0 added.]
+
+Crossley, S. A., Baffour, P., Tian, Y., Picou, A., Benner, M., & Boser, U. (2022). The persuasive essays for rating, selecting, and understanding argumentative and discourse elements (PERSUADE) corpus 1.0. *Assessing Writing*, 54, Article 100667. https://doi.org/10.1016/j.asw.2022.100667 [Lineage reference: the precursor corpus PERSUADE 2.0 builds on, kept here to credit its full history; not the version this study's data comes from.]
 
 Deep, P. D., Edgington, W. D., Ghosh, N., & Rahaman, M. S. (2025). Evaluating the effectiveness and ethical implications of AI detection tools in higher education. *Information*, 16(10), Article 905. https://doi.org/10.3390/info16100905
 
@@ -339,7 +355,7 @@ Pratama, A. R. (2025). The accuracy-bias trade-offs in AI text detection tools a
 
 Sadasivan, V. S., Kumar, A., Balasubramanian, S., Wang, W., & Feizi, S. (2024). Can AI-generated text be reliably detected? arXiv:2303.11156. [Confirmed: ID matches title/content; first submitted March 2023, revised through 2025 — cited year is a defensible but not the only choice.]
 
-Turnitin (2023). New research: Turnitin's AI detector shows no statistically significant bias against English Language Learners. Turnitin Blog, October 2023. https://www.turnitin.com/blog/new-research-turnitin-s-ai-detector-shows-no-statistically-significant-bias-against-english-language-learners [FLAGGED — corrected: the drafted arXiv ID, 2312.05241, does not resolve to a Turnitin response; that ID belongs to an unrelated paper, "Contra generative AI detection in higher education assessments." Turnitin's actual response to Liang et al. was published as a company blog post, not an arXiv preprint — the citation above is a blog post, which is a different reference type than every other entry in this list, so flagging in case a more formal citation is preferred, or in case a genuine Turnitin arXiv/preprint response exists that this search did not surface.]
+Turnitin (2023). New research: Turnitin's AI detector shows no statistically significant bias against English Language Learners. Turnitin Blog, October 2023. https://www.turnitin.com/blog/new-research-turnitin-s-ai-detector-shows-no-statistically-significant-bias-against-english-language-learners [Note on reference type: a blog post, not a peer-reviewed source — cited only for the narrow, verifiable claim that Turnitin's own detector showed no significant ELL bias on its own test sample, not as methodological authority over Liang et al. The drafted arXiv ID this entry originally carried, 2312.05241, resolved to an unrelated paper and has been removed; see §1 for the fuller trace of a related misattribution this search corrected.]
 
 Weber-Wulff, D., Anohina-Naumeca, A., Bjelobaba, S., Foltýnek, T., Guerrero-Dib, J., Popoola, O., Šigut, P., & Waddington, L. (2023). Testing of detection tools for AI-generated text. *International Journal for Educational Integrity*, 19, Article 26. https://doi.org/10.1007/s40979-023-00146-z
 

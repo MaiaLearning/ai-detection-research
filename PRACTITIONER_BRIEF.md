@@ -111,7 +111,7 @@ One caveat, stated plainly: we found that within a single genre, unfamiliar essa
 
 ## Finding 3: The penalty on English language learners has no fix
 
-Prior research — most notably a 2023 Stanford study in *Patterns* — found commercial detectors misclassified a majority of TOEFL essays by non-native writers as AI-generated. Turnitin disputed those findings on methodological grounds, including small sample size and short texts.
+Prior research — most notably a 2023 Stanford study in *Patterns* (Liang et al.) — found commercial detectors misclassified a majority of TOEFL essays by non-native writers as AI-generated, on a sample of 91 essays under 150 words each. Turnitin's own follow-up (2023) tested its detector on a much larger sample of authentic student essays and found no statistically significant ELL bias in its own system — a narrower and different claim than disputing Liang et al.'s methodology. [Corrected: an earlier draft of this brief attributed a "small sample size and short texts" methodological critique to Turnitin. That critique traces to a blog post by a different AI-detection vendor, not to Turnitin, and — being vendor marketing rather than a peer-reviewed source — is not the kind of evidence this study treats as reliable (see `CLAUDE.md`). We report Liang et al.'s sample size as a neutral fact about their own study, not as something "disputed" by a named party.]
 
 We tested it differently: on full-length US student essays, using a collection of writing that records which students are English language learners, and with the detector tuned to flag honest students only rarely.
 

@@ -142,6 +142,69 @@ came back at 36.9% FPR against a 1% target. That number motivated the
 ELLIPSE near-genre follow-up (item 3 above) more directly than the
 paraphrasing result did.
 
+## 6. Experiment 7 (dispersion mechanism test) added post hoc
+
+Not in the original plan or pre-registration. Added after Experiment 3
+produced an unexpected capability gradient — frontier proprietary models
+(Claude Sonnet 5, GPT-5.6 Terra) were the *most* detectable of 17 sources,
+with open-weight and older models less detectable — to test a mechanism
+hypothesis raised during analysis of that result, rather than to inform any
+product decision. Gate 2 had already failed at the composite level
+(item 1) and TPR@1%FPR (41.3%) was already known before this experiment
+ran; nothing here reopens that verdict. The writeup and this entry present
+it as exploratory, per `EXPERIMENT_7.md`'s own closing instruction.
+
+**What it tested:** whether the capability gradient is better explained by
+H1 (pretraining register — detectability tracks each essay's own polish,
+regardless of source) or H2 (post-training homogenization — detectability
+tracks how tightly a source's outputs cluster around their own centroid,
+relative to human writing). Predictions were pre-registered in
+`results/experiment7_manifest.json` before computing anything: an ordering
+of across-document dispersion (frontier proprietary < older proprietary <
+open-weight < human) and a primary correlation (dispersion vs TPR@1%FPR:
+negative, |ρ| > 0.5).
+
+**Results, reported plainly because they are mixed:**
+
+- The pre-registered **ordering held exactly**: frontier proprietary
+  (mean dispersion 1.845) < older proprietary (2.060) < open-weight
+  (2.421) < human (2.422).
+- The pre-registered **primary correlation did not clear its own bar**:
+  dispersion vs TPR, ρ = −0.321 (bootstrap CI −0.738 to 0.253). Right
+  direction, but the CI crosses zero and the magnitude falls short of the
+  |ρ| > 0.5 threshold set in advance. At n = 17 sources this is not strong
+  evidence either way.
+- **Centroid distance from the human mean was the stronger predictor**:
+  ρ = 0.775 (CI 0.348 to 0.958) against TPR — sources farther from the
+  human centroid are more detectable, more confidently than the dispersion
+  result above. A joint regression of TPR on both terms gets R² = 0.815
+  (coef_dispersion = −0.107, coef_centroid_distance = +0.130).
+- The **H1-specific direction check failed to support H1**: projecting
+  each source's centroid onto the human-mean-to-high-quality-quartile
+  vector correlated with TPR at ρ = −0.174 (CI −0.614 to 0.288) — weak and
+  wrong-signed relative to what H1 predicts (frontier models displaced
+  *toward* the high-quality region).
+- A secondary, independent route to Experiment 2's finding: human top
+  quality quartile dispersion (2.166) is lower than bottom quartile
+  (2.772), as predicted — essays rated as stronger writing are also more
+  internally regular. ELL essays are more dispersed than non-ELL (2.843 vs
+  2.370).
+- A stricter robustness check, holding the prompt set to the only 2 of 15
+  PERSUADE prompts common to all 18 sources (several sources drop to
+  n = 12-18 there), gives a materially different correlation (ρ = 0.199) —
+  reported in `results/experiment7_strict_common_prompt_check.csv` as an
+  exploratory, small-n check, not as evidence against the primary result.
+
+**Verdict:** the data leans mildly toward H2 over H1 — the ordering
+prediction held, and centroid distance (a homogenization-flavored measure)
+predicts TPR more strongly than dispersion does — but this experiment does
+not confirm H2 outright, since its own pre-registered dispersion-TPR test
+came in short of the threshold set for it, and n = 17 is too small to treat
+any of these correlations as decisive. The direction check argues against
+H1 as stated. Neither hypothesis should be reported as confirmed; this is
+suggestive, correlational evidence about model outputs, not a demonstration
+about what any lab actually trained on.
+
 ## On this repository's single commit
 
 This repository was pushed as a single commit imported from the working

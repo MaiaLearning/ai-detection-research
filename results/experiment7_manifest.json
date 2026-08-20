@@ -1,0 +1,41 @@
+{
+  "seed": 42,
+  "n_bootstrap": 1000,
+  "common_subsample_n": 200,
+  "pre_registered_ordering": "frontier proprietary < older proprietary < open-weight < human (tightest to widest)",
+  "pre_registered_correlation": "dispersion vs TPR: negative, |rho| > 0.5",
+  "ordering_group_means": {
+    "frontier_proprietary": 1.84487139296514,
+    "older_proprietary": 2.0596576845834917,
+    "open_weight": 2.421432913065818,
+    "human": 2.4222011646264248
+  },
+  "ordering_held_exactly": true,
+  "correlation_dispersion_tpr": {
+    "rho": -0.32107843137254904,
+    "ci_low": -0.7375245174346202,
+    "ci_high": 0.25250897395171534
+  },
+  "correlation_prediction_held": false,
+  "correlation_centroid_distance_tpr": {
+    "rho": 0.7745098039215688,
+    "ci_low": 0.3481567444380102,
+    "ci_high": 0.9574648577966656
+  },
+  "correlation_projection_toward_quality_tpr": {
+    "rho": -0.17401960784313728,
+    "ci_low": -0.6138994668697639,
+    "ci_high": 0.28839370562915756
+  },
+  "joint_regression_tpr_on_dispersion_and_centroid_distance": {
+    "coef_dispersion": -0.1067141475241916,
+    "coef_centroid_distance": 0.13016983817587024,
+    "intercept": 0.23496564698245417,
+    "r2": 0.8146187604285555
+  },
+  "quality_dispersion_prediction_held": true,
+  "standardization": "z-scored by human corpus mean/SD, then residualized on log1p(word_count) via a regression fit on human data only and applied uniformly to all groups",
+  "prompt_matching_deviation": "Strict common-prompt-set-across-all-18-groups leaves only 2 of 15 PERSUADE prompts, with several sources down to n=12-18 there. PRIMARY analysis uses each source's own full prompt coverage, matched pairwise against human on that same prompt set. The strict 2-prompt cut is reported separately as a small-n check (results/experiment7_strict_common_prompt_check.csv).",
+  "group_classification_caveat": "FRONTIER_PROPRIETARY / OLDER_PROPRIETARY / OPEN_WEIGHT groupings are judgment calls made for the pre-registered ordering test, stated explicitly in this script rather than left implicit.",
+  "exploratory_caveat": "n=17 sources; this is suggestive evidence about a mechanism hypothesis, not a decisive test, and cannot establish WHY models behave this way (training recipes are not published)."
+}

@@ -28,8 +28,9 @@ they weren't, and that document says so plainly.
 | 4 — survives editing? | Paraphrase attack drops TPR ~21 points; two RAID attacks (homoglyph, zero-width space) break tokenization rather than demonstrating evasion |
 | Near/far genre transfer | FPR: 1% (PERSUADE) → 2.4–3.7% (ELLIPSE, near genre) → 36.9% (RAID abstracts, far genre) |
 | ELL × genre compounding | No compounding — the ELL FPR penalty is intrinsic to ELL status, not explained by topic novelty |
-| 6 — features carry quality above word count? | **NO** — M1−M0 delta ρ = **−0.079** (CI −0.086 to −0.072), replicated on a held-out set |
+| 6 — features carry quality above word count? | **NO** — M1−M0 delta ρ = **−0.079** (CI −0.086 to **−0.072**), replicated on a held-out set |
 | 5 — vendor vs. prompting-effort confound | Shelved: DAIGT's real generation prompts turned out to be unscaffolded, dissolving the premise |
+| 7 — mechanism: pretraining polish (H1) vs. post-training homogenization (H2)? | **Mixed, exploratory.** Dispersion ordering held exactly (frontier < older < open-weight < human), but the pre-registered dispersion-vs-TPR correlation (ρ = −0.321) didn't clear its own \|ρ\|>0.5 bar; centroid distance from human predicted TPR more strongly (ρ = 0.775); the H1 direction check came back null/wrong-signed. Leans mildly toward H2, confirms neither. n=17, not decisive — see `AMENDMENTS.md` item 6 |
 
 Net: this study does not support shipping a scoring panel of this design —
 the panel was shipped, evaluated, and is being withdrawn. See
@@ -41,13 +42,14 @@ recommendations, and caveats.
 ```
 src/                  Pure, unit-tested library code (features, matching, stats, verification)
 scripts/              One script per experiment/analysis, each regenerates its own results/ outputs
-tests/                pytest suite for everything in src/ (72 tests, ~3s)
+tests/                pytest suite for everything in src/ (81 tests, ~3s)
 data/                 Corpora (see Data below — most are NOT committed here)
 results/              CSVs, plots, and JSON manifests written by scripts/ (committed)
 CLAUDE.md             Project constraints and conventions
 RESEARCH_PLAN.md       Original experimental design (experiments 1-4), pre-registered 2026-08-13
 EXPERIMENT_5.md        Design doc for the prompting-effort experiment (shelved)
 EXPERIMENT_6.md        Design doc for the quality-composite + verification-harness experiment
+EXPERIMENT_7.md        Design doc for the dispersion mechanism test (H1 vs. H2), added post hoc
 AMENDMENTS.md          Log of every consequential decision made or changed mid-study, with reasoning
 PRACTITIONER_BRIEF.md  The practitioner-facing write-up (also available as PRACTITIONER_BRIEF.pdf)
 ```
@@ -69,7 +71,7 @@ Requires Python 3.12+ and [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync
-uv run pytest       # 72 tests, ~3s, no data required
+uv run pytest       # 81 tests, ~3s, no data required
 ```
 
 ## Reproducing the study
@@ -141,6 +143,7 @@ uv run python scripts/analyze_ellipse_neargenre.py
 uv run python scripts/analyze_ell_genre_compounding.py     # also writes the diagnostic model (see above)
 uv run python scripts/experiment6_quality_composite.py
 uv run python scripts/experiment6_verification_demo.py
+uv run python scripts/experiment7_dispersion.py            # reuses experiment3's scored feature matrix; no new data or API calls
 ```
 
 `scripts/experiment5_prompt_effort.py` exists but is **shelved** — see the
@@ -157,6 +160,7 @@ and produces real API spend; it does not bear on the study's conclusions.
 | Bedrock + OpenAI generation (optional; already included) | ~$18 total | ~20-25 min each |
 | Experiment 4 (RAID streaming) | free | ~5-8 minutes |
 | ELLIPSE / compounding / experiment 6 analyses | free | a few minutes each |
+| Experiment 7 (dispersion, reuses experiment 3's output) | free | ~1 minute |
 
 ## Data licensing
 

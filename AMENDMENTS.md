@@ -375,6 +375,58 @@ hypothesis should be reported as confirmed; this is suggestive,
 correlational evidence about model outputs, not a demonstration about what
 any lab actually trained on.
 
+## 7. A misattributed citation, traced and corrected
+
+Both `TECHNICAL_REPORT.md` and `PRACTITIONER_BRIEF.md` originally stated
+that Turnitin "disputed the methodology" of Liang et al. (2023) — citing
+short texts, small samples, and noting Turnitin's own detector was not
+among those tested. This was flagged for tracing before either document
+shipped, since it is a specific attribution claim about who made a
+methodological argument, not just a missing citation detail.
+
+**What was found.** Turnitin did publish a real, dated response (2023):
+a company blog post reporting that its own detector, tested on a much
+larger sample of authentic student essays, showed no statistically
+significant ELL bias. Secondary sources gave conflicting accounts of
+whether that post also critiques Liang et al.'s methodology directly; the
+primary source itself could not be fetched to settle it (blocked by the
+site returning HTTP 403; an archive.org mirror was also inaccessible from
+this environment). One secondary source explicitly stated the post does
+*not* critique Liang et al.'s sample size or essay length, and only
+acknowledges that Turnitin's own system "lacks enough linguistic
+information" to score very short documents — a statement about Turnitin's
+product, not an argument about the Stanford study's validity.
+
+The specific critique originally attributed to Turnitin — small sample
+(91 essays), other unspecified "methodological flaws," and the note that
+a named detector was excluded from testing — was traced instead to a blog
+post by **Pangram**, a different AI-detection vendor, about **Pangram's**
+own product being excluded from Liang et al.'s evaluation. This was
+confirmed by fetching the Pangram blog post directly, which contains that
+exact language.
+
+**Why this matters beyond getting a name right.** Even correctly
+attributed to Pangram, this critique is a competing detection vendor's
+marketing content about its own product's exclusion from a study that
+found bias in vendor detectors generally — precisely the category CLAUDE.md
+already excludes as evidence ("Treat detector-vendor and 'humanizer' site
+numbers as marketing... Peer-reviewed sources... only"). The fix was not
+to re-attribute the critique correctly; it was to drop the critique
+entirely from both documents and report only what is independently
+verifiable: Liang et al.'s own stated sample (their paper, not a critic's
+gloss on it) and Turnitin's own confirmed finding.
+
+**Process note.** This was caught only because the specific pairing of
+claims — "disputed the methodology... small sample... short texts...
+detector not tested" — was checked against a fetched primary or secondary
+source rather than repeated from an earlier draft. The earlier draft's
+version was itself apparently assembled from conversational recall rather
+than a source read at the time, which is the same failure mode as the
+RAID attack-list hallucination caught earlier in this project (see the
+Errors and Fixes record for that incident) — a plausible-sounding claim
+that was never actually checked against a primary source. No claim about
+who-argued-what should ship in either document without this check.
+
 ## On this repository's single commit
 
 This repository was pushed as a single commit imported from the working

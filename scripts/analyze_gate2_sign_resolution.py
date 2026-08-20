@@ -103,7 +103,8 @@ DAIGT_PATH = Path("data/train_v2_drcat_02.csv")
 FROZEN_COMPOSITE_PATH = Path("results/experiment3_frozen_composite.joblib")
 HUMAN_SCORES_PATH = Path("results/experiment3_human_scores.csv")
 RESULTS_DIR = Path("results")
-SEED = 0
+SEED = 0  # for the sign-convention sampling check only (Check 1)
+N_BOOT = 1000
 
 
 def score_text(text, composite):
@@ -146,14 +147,36 @@ def main():
 
     print("\n=== Check 4: rank percentile per bin (what Spearman reflects) vs the arithmetic mean ===")
     ranks_pct = (pd.Series(resid).rank().to_numpy() - 1) / (len(resid) - 1)
+    levels = sorted(np.unique(quality))
+
+    print("Bootstrapping CIs on mean rank percentile per bin (resampling the full "
+          f"n={len(resid)} sample jointly, so bin membership and rank both vary together)...")
+    rng = np.random.default_rng(42)  # project-wide bootstrap seed convention; distinct from Check 1's SEED=0
+    n = len(resid)
+    boot_by_level = {lvl: [] for lvl in levels}
+    for _ in range(N_BOOT):
+        idx = rng.integers(0, n, n)
+        ranks_boot = (pd.Series(resid[idx]).rank().to_numpy() - 1) / (n - 1)
+        q_boot = quality[idx]
+        for lvl in levels:
+            mask = q_boot == lvl
+            if mask.any():
+                boot_by_level[lvl].append(float(ranks_boot[mask].mean()))
+    rank_pct_ci = {
+        lvl: (float(np.percentile(boot_by_level[lvl], 2.5)), float(np.percentile(boot_by_level[lvl], 97.5)))
+        for lvl in levels
+    }
+
     rows = []
-    for level in sorted(np.unique(quality)):
+    for level in levels:
         mask = quality == level
         r = resid[mask]
+        ci_lo, ci_hi = rank_pct_ci[level]
         rows.append({
             "holistic_essay_score": int(level), "n": int(mask.sum()),
             "mean_residual_p_ai": float(r.mean()), "median_residual_p_ai": float(np.median(r)),
             "mean_rank_percentile": float(ranks_pct[mask].mean()),
+            "mean_rank_percentile_ci_low": ci_lo, "mean_rank_percentile_ci_high": ci_hi,
             "skew_residual_p_ai": float(skew(r)),
             "word_count_median": float(np.median(wc[mask])),
         })

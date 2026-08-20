@@ -107,6 +107,8 @@ Admissions personal statements are a small, private, largely unscrapeable genre.
 
 One caveat, stated plainly: we found that within a single genre, unfamiliar essay *topics* did not degrade accuracy. A detector calibrated on argumentative essays handled unseen argumentative prompts fine. The degradation comes from changes in the kind of writing, not the subject matter.
 
+**A detector can flag a student for characters they never typed.** Invisible formatting characters — zero-width spaces, and letters from other alphabets that look identical to Latin ones — routinely end up in student documents through ordinary copying and pasting from the web or from a PDF. In our testing, text carrying these characters broke the detector's text processing badly enough that both AI-written and human-written essays were flagged at or near 100% (human false-positive rate: 99.8–100%, depending on which of the two character types was present). This is a software defect rather than a property of the writing, and there is no way for a student to see the characters or know they are there.
+
 ---
 
 ## Finding 3: The penalty on English language learners has no fix

@@ -20,9 +20,9 @@ We shipped it. We are now withdrawing it, and we think admissions offices should
 
 **A detector's accuracy doesn't transfer between kinds of writing.** Calibrated to a 1% false-positive rate on student persuasive essays, the same detector at the same threshold produced a 37% false-positive rate on a different genre of human writing. Vendors publish a single accuracy number. That number describes the writing they tested on, and admissions essays are almost certainly not it.
 
-**English language learners pay a penalty that can't be designed away.** ELL writers were falsely flagged at 1.5 to 2.5 times the rate of other students, replicating across two independently built corpora. We tested whether unfamiliar essay topics explained it. They didn't — which means there is no "use better topics" fix available.
+**English language learners pay a penalty that broadening topic coverage doesn't fix.** ELL writers were falsely flagged at 1.7 times the rate of other students within one corpus, and 2.6 times the rate on a second, independently built, all-ELL corpus (part of that larger gap may be that the second corpus is a different kind of writing instrument, not just a different population — see Finding 3). We tested whether unfamiliar essay topics explained the gap. They didn't — which means "use better topics in calibration" isn't a fix. We did not test every possible mitigation.
 
-And underneath all of that, the 94.5% figure describes a task no admissions office performs. To use a detector on a real application you have to draw a line: above this score, flag it. Draw that line so only 1 in 100 honest essays gets flagged — roughly the strictest setting any vendor advertises — and **our detector caught 41% of AI-written essays.** The majority passed. A single round of paraphrasing dropped that by another 21 points.
+And underneath all of that, the 94.5% figure describes a task no admissions office performs. To use a detector on a real application you have to draw a line: above this score, flag it. Draw that line so only 1 in 100 honest essays gets flagged — in the range vendors publish — and **our detector caught 41% of AI-written essays.** The majority passed. On the one generator and corpus where we could test it, running the AI-written essays through a paraphraser first dropped the catch rate from 52% to 31% — a 21-point drop, but from a different, higher starting point than the 41% figure above; the two aren't on the same baseline.
 
 The two numbers aren't contradictory. They measure different things. 94.5% is how well the detector ranks two essays against each other; 41% is how well it judges one essay alone. Only the second is a task anyone actually does, and it's the one that rarely appears in marketing material.
 
@@ -38,13 +38,13 @@ Four terms recur below.
 
 **95% confidence interval** — the range the true value plausibly falls in, given how many essays we tested. Where two ranges overlap heavily, we're careful not to claim a difference.
 
-**Correlation** — how consistently two things move together, on a scale where 0 means no relationship and 1 means perfect lockstep. The correlations we report are small in size, around 0.13 to 0.15. For predicting any single student's essay, that's weak. But these are not predictions about individuals — they are systematic tilts across tens of thousands of essays, always in the same direction. A small bias applied consistently to every applicant is a different thing from a small bias applied randomly, and it is the direction that matters here, not the magnitude.
+**Correlation** — how consistently two things move together, on a scale from −1 to +1. 0 means no relationship, +1 means perfect lockstep in the same direction, and a negative number means the two move in *opposite* directions — which is the sign that matters most in Finding 1, below. The correlations we report are small in size, around 0.13 to 0.15 in magnitude. For predicting any single student's essay, that's weak. But these are not predictions about individuals — they are systematic tilts across tens of thousands of essays, always in the same direction. A small bias applied consistently to every applicant is a different thing from a small bias applied randomly, and it is the direction that matters here, not the magnitude.
 
 ## How we caught it, and why that matters more than the findings
 
 This did not begin as a statistical review. It began as an **AI quality audit** — a scheduled review of our AI features asking not whether the models were performing well, but whether their outputs were *appropriate*: correct, suitable for the audience, and sound as advice.
 
-The feature had shipped. Its detection numbers looked good, and that is precisely why it shipped — our implementation, like most, was built and evaluated around detection rate. The audit examined something different: the feedback students actually received. Alongside the score, the feature told them how to reduce their flag risk — vary your sentence lengths, break up your rhythm, add irregularity. Read individually, each suggestion sounded reasonable. Read as a set, against essays we were separately grading for quality, they looked like instructions to write worse.
+The feature had shipped. Its detection numbers looked good, and that is precisely why it shipped — our implementation, like most, was built and evaluated around detection rate. The audit examined something different: the feedback students actually received. Alongside the score, the feature told them how to reduce their flag risk — vary your sentence lengths, break up your rhythm, add irregularity. Read individually, each suggestion sounded reasonable. Read as a set, against what a strong essay actually looks like, they looked like instructions to write worse. (This audit was a review of the production feature's output in the field, not of any student data — the statistical study reported here that followed it used only public research corpora, never MaiaLearning student essays; see our code and data repository.)
 
 That observation is what prompted the statistical work, and the statistics confirmed it. But the sequence is the part worth dwelling on:
 
@@ -107,11 +107,9 @@ Admissions personal statements are a small, private, largely unscrapeable genre.
 
 One caveat, stated plainly: we found that within a single genre, unfamiliar essay *topics* did not degrade accuracy. A detector calibrated on argumentative essays handled unseen argumentative prompts fine. The degradation comes from changes in the kind of writing, not the subject matter.
 
-**A detector can flag a student for characters they never typed.** Invisible formatting characters — zero-width spaces, and letters from other alphabets that look identical to Latin ones — routinely end up in student documents through ordinary copying and pasting from the web or from a PDF. In our testing, text carrying these characters broke the detector's text processing badly enough that both AI-written and human-written essays were flagged at or near 100% (human false-positive rate: 99.8–100%, depending on which of the two character types was present). This is a software defect rather than a property of the writing, and there is no way for a student to see the characters or know they are there.
-
 ---
 
-## Finding 3: The penalty on English language learners has no fix
+## Finding 3: The penalty on English language learners isn't fixed by broadening topic coverage
 
 Prior research — most notably a 2023 Stanford study in *Patterns* (Liang et al.) — found commercial detectors misclassified a majority of TOEFL essays by non-native writers as AI-generated, on a sample of 91 essays under 150 words each. Turnitin's own follow-up (2023) tested its detector on a much larger sample of authentic student essays and found no statistically significant ELL bias in its own system — a narrower and different claim than disputing Liang et al.'s methodology.
 
@@ -127,11 +125,11 @@ We report it because it is easy to find in our repository and because the distin
 
 That is the shape of this problem generally. The bias is not dramatic enough to fail a well-designed statistical test, and it is more than sufficient to matter to the students on the wrong side of it. Anyone evaluating a detector should be alert to a vendor pointing at a passed fairness audit as though it settled the question. Ours passed too.
 
-**The part with no mitigation:** we tested whether the gap came from ELL students encountering unfamiliar prompts. We held four assignments out of training entirely and rebuilt the model. The ELL penalty was identical on held-out assignments as on trained-on ones.
+**The mitigation we tested didn't work:** we checked whether the gap came from ELL students encountering unfamiliar prompts. We held four assignments out of training entirely and rebuilt the model. The ELL penalty was identical on held-out assignments as on trained-on ones.
 
-The gap tracks the writer, not the topic. A vendor cannot close it by expanding topic coverage in their calibration data. It is a property of detecting non-native writing patterns as machine patterns — which is what these features do, because both involve regularity.
+The gap tracks the writer, not the topic. A vendor cannot close it by expanding topic coverage in their calibration data. It is a property of detecting non-native writing patterns as machine patterns — which is what these features do, because both involve regularity. We did not test every possible mitigation — a policy of declining to score essays that fall in the range where ELL and non-ELL writers overlap, rather than using one fixed cutoff for everyone, is a real option we haven't evaluated — but the one specific fix that seems obvious (better topic coverage) doesn't work.
 
-Your international students and students from immigrant families carry elevated false-accusation risk, and there is no configuration change that removes it.
+Your international students and students from immigrant families carry elevated false-accusation risk from topic-coverage fixes that don't address it.
 
 ---
 
@@ -139,13 +137,15 @@ Your international students and students from immigrant families carry elevated 
 
 At a 1% false-positive rate, our detector caught **41.3%** of AI-written essays. Most AI-written essays passed.
 
-Two further results:
+Three further results:
 
-**Paraphrasing defeats it.** Running AI text through a paraphraser dropped detection by 21 percentage points — the single most effective evasion we tested. Paraphrasing tools are free and take one click.
+**Paraphrasing defeats it.** On the one AI model and text collection where we could test this, running its output through a paraphraser dropped the catch rate from 52% to 31% — a 21-point drop, the single most effective evasion we tested, from a different starting point than the 41.3% figure above. Paraphrasing tools are free and take one click.
 
-**The models students actually use were the most detectable — for a reason that won't last.** Current frontier models from both major vendors were the *easiest* to detect in our corpus, above older and open-weight models. That sounds like good news. It isn't: the mechanism is polish. Heavily-tuned frontier models produce very regular prose, which is the same thing our detector flags in strong human writers. Any student who edits their AI output, or uses an open-weight model, moves out of the detectable range.
+**The models students actually use were the most detectable — and we don't know why, which matters for how long that lasts.** Current frontier models from both major vendors were the *easiest* to detect in our corpus, above older and open-weight models. That sounds like good news, but we'd be overselling it to tell you why. Our best guess is that what the detector actually catches is *regularity* of prose — heavily-tuned frontier models produce very regular output, which is the same thing our detector flags in strong human writers. We ran a follow-up analysis to test that guess directly, and it didn't hold up cleanly: the specific prediction it makes (that frontier output should resemble strong *human* writing, not just be regular in general) came back null. So we can say the models students use today happen to be the most detectable ones; we can't tell you it's because they write like strong students, and we can't tell you how long the pattern holds. What we can say with more confidence: any student who edits their AI output, or uses an open-weight model instead, moves out of the range our detector was catching.
 
-So the population reliably caught is: students who used AI and submitted it unedited. The population at elevated risk of false accusation is: strong writers and English language learners. That is close to the exact inverse of a well-designed instrument.
+**A detector can flag a student for characters they never typed.** Invisible formatting characters — zero-width spaces, and letters from other alphabets that look identical to Latin ones — routinely end up in student documents through ordinary copying and pasting from the web or from a PDF. In our testing, text carrying these characters broke the detector's text processing badly enough that both AI-written and human-written essays were flagged at or near 100% (human false-positive rate: 99.8–100%, depending on which of the two character types was present). This is a software defect rather than a property of the writing, and there is no way for a student to see the characters or know they are there.
+
+So the population reliably caught is: students who used AI and submitted it unedited, on a model whose maker hasn't tuned it toward variety. The population at elevated risk of false accusation is: strong writers, English language learners, and anyone whose document happens to carry an invisible character from a copy-paste. That is close to the exact inverse of a well-designed instrument.
 
 ---
 
@@ -185,13 +185,13 @@ We think these are important enough to state prominently rather than bury.
 
 **The second ELL corpus is a language-proficiency assessment instrument**, not classroom writing. That may explain why its false-positive rate exceeded our primary corpus. We don't know which is closer to admissions essays.
 
-**We pre-registered predictions and several were wrong.** We expected current Claude models to be hard to detect; they were the easiest. We expected an AI-detection benchmark's contributors to have used elaborate prompting; they hadn't. We expected ELL status and genre shift to compound; they didn't. We report those failures because a literature that only publishes confirmed hypotheses is exactly how the field ended up here.
+**We pre-registered predictions and several were wrong.** We expected current Claude models to be hard to detect; it was the second-easiest of 17 models to detect, just behind GPT. We expected an AI-detection benchmark's contributors to have used elaborate prompting; they hadn't. We expected ELL status and genre shift to compound; they didn't. We report those failures because a literature that only publishes confirmed hypotheses is exactly how the field ended up here.
 
 ---
 
 ## Bottom line
 
-We built the thing, shipped it, measured it properly, and found that it flags good writers, penalizes English language learners, can't be calibrated for the genre it would be used on, and misses most of what it's looking for. It is being withdrawn.
+We built the thing, shipped it, measured it properly, and found that it flags good writers, penalizes English language learners, isn't calibrated for the genre it would be used on — and nobody has the data to calibrate it, since no public corpus of admissions essays carries both quality scores and ELL annotation — and misses most of what it's looking for. It is being withdrawn.
 
 Two things we'd ask you to take from that. The first is the evidence itself, which we think is strong enough to keep detector scores out of admissions decisions.
 

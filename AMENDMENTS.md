@@ -375,6 +375,18 @@ hypothesis should be reported as confirmed; this is suggestive,
 correlational evidence about model outputs, not a demonstration about what
 any lab actually trained on.
 
+**Note on framing across documents:** this log's "leans mildly toward H2"
+describes the direction of two secondary, non-adjudicating measures
+(ordering, centroid distance). `TECHNICAL_REPORT.md` §5.10 deliberately
+states the more conservative "we cannot adjudicate H1 against H2... the
+mechanism is open," since neither of those two measures actually
+distinguishes H1 from H2 (both hypotheses predict them equally), and the
+one test that does distinguish them — the H1 direction check — came back
+null. Read this log's "leans mildly" as background colour on which way the
+non-discriminating evidence points, not as a claim this study confirmed;
+the paper's "open" is the more defensible framing of the finding as a
+whole, and `README.md`'s summary has been aligned to it.
+
 ## 7. A misattributed citation, traced and corrected
 
 Both `TECHNICAL_REPORT.md` and `PRACTITIONER_BRIEF.md` originally stated

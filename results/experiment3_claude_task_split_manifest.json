@@ -1,0 +1,22 @@
+{
+  "seed": 42,
+  "n_bootstrap": 1000,
+  "note": "Recomputed from results/experiment3_ai_scores.csv and the final threshold in results/experiment3_separation.csv -- the same OOF scores Section 5.6's main TPR table uses. An earlier draft cited 75.5%/70.1% from scripts/experiment5_prompt_effort.py's docstring, computed before the OpenAI generations were folded into the training corpus; those figures are stale for the same reason the DAIGT Claude vintages needed correcting.",
+  "n_total_claude": 1000,
+  "n_nan_task": 66,
+  "independent_tpr": {
+    "point": 0.7532188841201717,
+    "ci_low": 0.7124463519313304,
+    "ci_high": 0.7939914163090128
+  },
+  "text_dependent_tpr": {
+    "point": 0.7008547008547008,
+    "ci_low": 0.6602564102564102,
+    "ci_high": 0.7435897435897436
+  },
+  "gap_pp": {
+    "point": 5.236418326547088,
+    "ci_low": -0.649141630901289,
+    "ci_high": 11.373390557939922
+  }
+}

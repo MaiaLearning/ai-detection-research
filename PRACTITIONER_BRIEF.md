@@ -8,7 +8,7 @@
 
 ## The short version
 
-We spent several weeks building a statistical AI detector for student essays. It works about as well as the published research says these tools work. The standard way to report that: show it one human-written essay and one AI-written essay **side by side**, and ask which looks more machine-generated. It gets that comparison right **94.5% of the time**, across writing from 17 different AI models.
+We spent several weeks building a statistical AI detector for student essays. It works about as well as the published research says these tools work. The standard way to report that: show it one human-written essay and one AI-written essay **side by side**, and ask which looks more machine-generated. It gets that comparison right **94.5% of the time**, across writing from 17 different AI sources (some are different versions of the same underlying model).
 
 Read that sentence carefully, because the detail matters. The detector is not declaring either essay AI-written. It is only ranking one against the other. Nobody grading applications does this — an admissions reader has a single essay in front of them, nothing to compare it against, and needs a yes-or-no answer.
 
@@ -20,7 +20,7 @@ We shipped it. We are now withdrawing it, and we think admissions offices should
 
 **A detector's accuracy doesn't transfer between kinds of writing.** Calibrated to a 1% false-positive rate on student persuasive essays, the same detector at the same threshold produced a 37% false-positive rate on a different genre of human writing. Vendors publish a single accuracy number. That number describes the writing they tested on, and admissions essays are almost certainly not it.
 
-**English language learners pay a penalty that broadening topic coverage doesn't fix.** ELL writers were falsely flagged at 1.7 times the rate of other students within one corpus, and 2.6 times the rate on a second, independently built, all-ELL corpus (part of that larger gap may be that the second corpus is a different kind of writing instrument, not just a different population — see Finding 3). We tested whether unfamiliar essay topics explained the gap. They didn't — which means "use better topics in calibration" isn't a fix. We did not test every possible mitigation.
+**English language learners pay a penalty that broadening topic coverage doesn't fix.** ELL writers were falsely flagged at 1.7 times the rate of other students within one corpus, and 2.6 times the rate on a second, independently built, all-ELL corpus (part of that larger gap may be that the second corpus is a different kind of writing instrument, not just a different population — see Limitations). We tested whether unfamiliar essay topics explained the gap. They didn't — which means "use better topics in calibration" isn't a fix. We did not test every possible mitigation.
 
 And underneath all of that, the 94.5% figure describes a task no admissions office performs. To use a detector on a real application you have to draw a line: above this score, flag it. Draw that line so only 1 in 100 honest essays gets flagged — in the range vendors publish — and **our detector caught 41% of AI-written essays.** The majority passed. On the one generator and corpus where we could test it, running the AI-written essays through a paraphraser first dropped the catch rate from 52% to 31% — a 21-point drop, but from a different, higher starting point than the 41% figure above; the two aren't on the same baseline.
 
@@ -111,7 +111,7 @@ One caveat, stated plainly: we found that within a single genre, unfamiliar essa
 
 ## Finding 3: The penalty on English language learners isn't fixed by broadening topic coverage
 
-Prior research — most notably a 2023 Stanford study in *Patterns* (Liang et al.) — found commercial detectors misclassified a majority of TOEFL essays by non-native writers as AI-generated, on a sample of 91 essays under 150 words each. Turnitin's own follow-up (2023) tested its detector on a much larger sample of authentic student essays and found no statistically significant ELL bias in its own system — a narrower and different claim than disputing Liang et al.'s methodology.
+Prior research — most notably a 2023 Stanford study in *Patterns* (Liang et al.) — found commercial detectors misclassified a majority of TOEFL essays by non-native writers as AI-generated, on a sample of 91 essays under 150 words each. Turnitin's own 2023 blog post reported testing its detector on a much larger sample of authentic student essays and finding no statistically significant ELL bias in its own system — a narrower and different claim than disputing Liang et al.'s methodology.
 
 We tested it differently: on full-length US student essays, using a collection of writing that records which students are English language learners, and with the detector tuned to flag honest students only rarely.
 
@@ -129,7 +129,7 @@ That is the shape of this problem generally. The bias is not dramatic enough to 
 
 The gap tracks the writer, not the topic. A vendor cannot close it by expanding topic coverage in their calibration data. It is a property of detecting non-native writing patterns as machine patterns — which is what these features do, because both involve regularity. We did not test every possible mitigation — a policy of declining to score essays that fall in the range where ELL and non-ELL writers overlap, rather than using one fixed cutoff for everyone, is a real option we haven't evaluated — but the one specific fix that seems obvious (better topic coverage) doesn't work.
 
-Your international students and students from immigrant families carry elevated false-accusation risk from topic-coverage fixes that don't address it.
+Your international students and students from immigrant families carry elevated false-accusation risk, and broadening topic coverage in calibration data does not address it.
 
 ---
 
@@ -141,7 +141,7 @@ Three further results:
 
 **Paraphrasing defeats it.** On the one AI model and text collection where we could test this, running its output through a paraphraser dropped the catch rate from 52% to 31% — a 21-point drop, the single most effective evasion we tested, from a different starting point than the 41.3% figure above. Paraphrasing tools are free and take one click.
 
-**The models students actually use were the most detectable — and we don't know why, which matters for how long that lasts.** Current frontier models from both major vendors were the *easiest* to detect in our corpus, above older and open-weight models. That sounds like good news, but we'd be overselling it to tell you why. Our best guess is that what the detector actually catches is *regularity* of prose — heavily-tuned frontier models produce very regular output, which is the same thing our detector flags in strong human writers. We ran a follow-up analysis to test that guess directly, and it didn't hold up cleanly: the specific prediction it makes (that frontier output should resemble strong *human* writing, not just be regular in general) came back null. So we can say the models students use today happen to be the most detectable ones; we can't tell you it's because they write like strong students, and we can't tell you how long the pattern holds. What we can say with more confidence: any student who edits their AI output, or uses an open-weight model instead, moves out of the range our detector was catching.
+**The models students actually use were the most detectable — and we don't know why, which matters for how long that lasts.** Current frontier models from both major vendors were the *easiest* to detect in our corpus, above older and open-weight models. That sounds like good news, but we'd be overselling it to tell you why. Two different explanations are consistent with everything else in this report, and we can't tell you which is right. One: frontier models happen to produce especially *uniform* output, and uniformity is what our detector catches — this doesn't require frontier output to specifically resemble strong human writing, just to be internally consistent. Two, a more specific version of that idea: frontier models write in a way that resembles polished, professionally-edited adult prose, which is also what strong student essays do — this is the version we could actually test directly, and it came back null: frontier output is not displaced toward the region our top-scoring human essays occupy. So we can say the models students use today happen to be the most detectable ones; we can't tell you why, and we can't tell you how long the pattern holds. What we can say with more confidence: any student who edits their AI output, or uses an open-weight model instead, moves out of the range our detector was catching.
 
 **A detector can flag a student for characters they never typed.** Invisible formatting characters — zero-width spaces, and letters from other alphabets that look identical to Latin ones — routinely end up in student documents through ordinary copying and pasting from the web or from a PDF. In our testing, text carrying these characters broke the detector's text processing badly enough that both AI-written and human-written essays were flagged at or near 100% (human false-positive rate: 99.8–100%, depending on which of the two character types was present). This is a software defect rather than a property of the writing, and there is no way for a student to see the characters or know they are there.
 
@@ -177,7 +177,9 @@ An unwillingness to answer 1 and 3 is itself informative. Question 5 is the one 
 
 We think these are important enough to state prominently rather than bury.
 
-**Our corpus is not admissions essays.** We used argumentative essays by US students in grades 6–12, because it is the only large public corpus of student writing that carries both independent quality scores and ELL status. Admissions personal statements are a different genre — shorter, narrative, first-person. Given Finding 2, our specific numbers should not be assumed to transfer. The *mechanisms* — quality anti-correlation, genre sensitivity, ELL penalty — are properties of the approach and we expect them to persist.
+**Our corpus is not admissions essays.** We used argumentative essays by US students in grades 6–12, because it is the only large public corpus of student writing that carries both independent quality scores and ELL status. Admissions personal statements are a different genre — shorter, narrative, first-person. Given Finding 2, our specific numbers should not be assumed to transfer. The *mechanisms* — the quality inversion, genre sensitivity, ELL penalty — are properties of the approach and we expect them to persist.
+
+**Our results speak to English.** A Czech-language replication of the underlying non-native-writer bias research found the *opposite* relationship for non-native Czech writers than the one this whole line of research (including ours) finds for English. That doesn't undo our findings, but it means you shouldn't assume they transfer to detection in other languages.
 
 **We did not test commercial detectors.** We tested a detector built on the signals those tools are understood to use. Our findings constrain the method, not any vendor's specific product.
 
@@ -185,7 +187,7 @@ We think these are important enough to state prominently rather than bury.
 
 **The second ELL corpus is a language-proficiency assessment instrument**, not classroom writing. That may explain why its false-positive rate exceeded our primary corpus. We don't know which is closer to admissions essays.
 
-**We pre-registered predictions and several were wrong.** We expected current Claude models to be hard to detect; it was the second-easiest of 17 models to detect, just behind GPT. We expected an AI-detection benchmark's contributors to have used elaborate prompting; they hadn't. We expected ELL status and genre shift to compound; they didn't. We report those failures because a literature that only publishes confirmed hypotheses is exactly how the field ended up here.
+**We pre-registered predictions and several were wrong.** We expected current Claude models to be hard to detect; it was the second-easiest of 17 sources to detect, just behind GPT. We expected an AI-detection benchmark's contributors to have used elaborate prompting; they hadn't. We expected ELL status and genre shift to compound; they didn't. We report those failures because a literature that only publishes confirmed hypotheses is exactly how the field ended up here.
 
 ---
 

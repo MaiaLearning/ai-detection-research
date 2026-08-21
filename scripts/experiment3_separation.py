@@ -146,14 +146,27 @@ def main():
     threshold = threshold_at_fpr(human_scores, TARGET_FPR)
     overall_fpr = rate_at_threshold(human_scores, threshold)
     overall_tpr = rate_at_threshold(ai_scores, threshold)
+    _, overall_fpr_lo, overall_fpr_hi = bootstrap_stat_ci(
+        [human_scores], lambda a: rate_at_threshold(a, threshold), n_boot=N_BOOT, seed=SEED,
+    )
+    _, overall_tpr_lo, overall_tpr_hi = bootstrap_stat_ci(
+        [ai_scores], lambda a: rate_at_threshold(a, threshold), n_boot=N_BOOT, seed=SEED,
+    )
     print(f"Threshold for {TARGET_FPR:.0%} target FPR (on human OOF scores): {threshold:.4f}")
-    print(f"Realized overall FPR: {overall_fpr:.4f}, overall TPR: {overall_tpr:.4f}")
+    print(f"Realized overall FPR: {overall_fpr:.4f} ({overall_fpr_lo:.4f}, {overall_fpr_hi:.4f}), "
+          f"overall TPR: {overall_tpr:.4f} ({overall_tpr_lo:.4f}, {overall_tpr_hi:.4f})")
 
     ell_mask = (human["ell_clean"] == "Yes").to_numpy()
     fpr_ell = rate_at_threshold(human_scores[ell_mask], threshold)
     fpr_non_ell = rate_at_threshold(human_scores[~ell_mask], threshold)
-    print(f"FPR by subgroup: ELL={fpr_ell:.4f} (n={ell_mask.sum()}), "
-          f"non-ELL={fpr_non_ell:.4f} (n={(~ell_mask).sum()})")
+    _, fpr_ell_lo, fpr_ell_hi = bootstrap_stat_ci(
+        [human_scores[ell_mask]], lambda a: rate_at_threshold(a, threshold), n_boot=N_BOOT, seed=SEED,
+    )
+    _, fpr_non_ell_lo, fpr_non_ell_hi = bootstrap_stat_ci(
+        [human_scores[~ell_mask]], lambda a: rate_at_threshold(a, threshold), n_boot=N_BOOT, seed=SEED,
+    )
+    print(f"FPR by subgroup: ELL={fpr_ell:.4f} ({fpr_ell_lo:.4f}, {fpr_ell_hi:.4f}) (n={ell_mask.sum()}), "
+          f"non-ELL={fpr_non_ell:.4f} ({fpr_non_ell_lo:.4f}, {fpr_non_ell_hi:.4f}) (n={(~ell_mask).sum()})")
 
     ai_scores_df = pd.DataFrame({
         "source": ai["source"], "prompt_name": ai["prompt_name"], "task": ai["task"],
@@ -192,9 +205,12 @@ def main():
 
     tpr_by_model = []
     for source, group in pd.DataFrame({"source": ai["source"], "score": ai_scores}).groupby("source"):
+        tpr_point, tpr_lo, tpr_hi = bootstrap_stat_ci(
+            [group["score"].to_numpy()], lambda a: rate_at_threshold(a, threshold), n_boot=N_BOOT, seed=SEED,
+        )
         tpr_by_model.append({
             "source": source, "n": len(group),
-            "tpr": rate_at_threshold(group["score"], threshold),
+            "tpr": tpr_point, "tpr_ci_low": tpr_lo, "tpr_ci_high": tpr_hi,
         })
     tpr_by_model_df = pd.DataFrame(tpr_by_model).sort_values("tpr")
     print("\nTPR by generating model:\n" + tpr_by_model_df.to_string(index=False))
@@ -229,10 +245,10 @@ def main():
     summary_rows = [
         {"metric": "overall_auc", "value": auc_point, "ci_low": auc_lo, "ci_high": auc_hi},
         {"metric": "threshold_at_target_fpr", "value": threshold, "ci_low": np.nan, "ci_high": np.nan},
-        {"metric": "overall_fpr", "value": overall_fpr, "ci_low": np.nan, "ci_high": np.nan},
-        {"metric": "overall_tpr", "value": overall_tpr, "ci_low": np.nan, "ci_high": np.nan},
-        {"metric": "fpr_ell", "value": fpr_ell, "ci_low": np.nan, "ci_high": np.nan},
-        {"metric": "fpr_non_ell", "value": fpr_non_ell, "ci_low": np.nan, "ci_high": np.nan},
+        {"metric": "overall_fpr", "value": overall_fpr, "ci_low": overall_fpr_lo, "ci_high": overall_fpr_hi},
+        {"metric": "overall_tpr", "value": overall_tpr, "ci_low": overall_tpr_lo, "ci_high": overall_tpr_hi},
+        {"metric": "fpr_ell", "value": fpr_ell, "ci_low": fpr_ell_lo, "ci_high": fpr_ell_hi},
+        {"metric": "fpr_non_ell", "value": fpr_non_ell, "ci_low": fpr_non_ell_lo, "ci_high": fpr_non_ell_hi},
         {"metric": "gate2_composite_raw_rho", "value": raw_point, "ci_low": raw_lo, "ci_high": raw_hi},
         {"metric": "gate2_composite_partial_rho", "value": partial_point, "ci_low": partial_lo, "ci_high": partial_hi},
         {"metric": "separation_effect_2auc_minus_1", "value": separation_effect, "ci_low": np.nan, "ci_high": np.nan},

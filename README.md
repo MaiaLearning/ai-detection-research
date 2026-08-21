@@ -5,7 +5,7 @@ measure of student essays can honestly support a user-facing AI-detection or
 quality panel in MaiaLearning's essay review feature. Full background,
 methodology, and hard constraints are in [`CLAUDE.md`](CLAUDE.md); the
 experimental design is in [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md) and the
-`EXPERIMENT_5.md` / `EXPERIMENT_6.md` design docs. The practitioner-facing
+`EXPERIMENT_5.md` / `EXPERIMENT_6.md` / `EXPERIMENT_7.md` design docs. The practitioner-facing
 write-up is [`PRACTITIONER_BRIEF.md`](PRACTITIONER_BRIEF.md)
 ([PDF](PRACTITIONER_BRIEF.pdf)) — that's the primary document for a
 non-technical reader; this repository exists so every number in it can be
@@ -31,8 +31,8 @@ they weren't, and that document says so plainly.
 | 3 — separates human/AI? | AUC 0.945, but only 41.3% TPR at a 1% FPR target; ELL FPR (1.56%) > non-ELL (0.94%) |
 | 4 — survives editing? | Paraphrase attack drops TPR ~21 points; two RAID attacks (homoglyph, zero-width space) break tokenization rather than demonstrating evasion |
 | Near/far genre transfer | FPR: 1% (PERSUADE) → 2.4–3.7% (ELLIPSE, near genre) → 36.9% (RAID abstracts, far genre) |
-| ELL × genre compounding | No compounding — the ELL FPR penalty is intrinsic to ELL status, not explained by topic novelty |
-| 6 — features carry quality above word count? | **NO** — M1−M0 delta ρ = **−0.079** (CI −0.086 to **−0.072**), replicated on a held-out set |
+| ELL × genre compounding | No compounding — the penalty tracks the writer rather than the prompt; broadening topic coverage does not close it. An abstain-band mitigation was not evaluated |
+| 6 — features carry quality above word count? | **NO for a linear model** — M1−M0 delta ρ = **−0.079** (CI −0.086 to **−0.072**), replicated on a held-out set. A pre-specified gradient-boosting secondary check recovers signal instead (R²=0.636, ρ=0.794, above the word-count-only baseline) — left unresolved for a non-linear approach; see `TECHNICAL_REPORT.md` §5.8 |
 | 5 — vendor vs. prompting-effort confound | Shelved: DAIGT's real generation prompts turned out to be unscaffolded, dissolving the premise |
 | 7 — mechanism: pretraining polish (H1) vs. post-training homogenization (H2)? | **Mixed, exploratory.** Dispersion ordering held in point-estimate order (frontier < older < open-weight ≈ human, the last gap negligible), but the pre-registered dispersion-vs-TPR correlation (ρ = −0.321) didn't clear its own \|ρ\|>0.5 bar (itself set without a power calculation at n=17 — see `AMENDMENTS.md` item 2); centroid distance from human predicted TPR more strongly (ρ = 0.775), though this doesn't distinguish H1 from H2 — both predict it. The H1-specific direction check — the one test that does distinguish the hypotheses — came back null/wrong-signed (ρ = −0.174), arguing against H1. The composite discriminant vector and the human quality vector first read as near-orthogonal (0.067, 86.2°); that did not survive conditioning both vectors on word count consistently — residualized, there's a real, moderate alignment (cosine 0.533, 57.8°), the cleanest single mechanism number this experiment produced. Separately: Gate 2's positive quality correlation (+0.135, Spearman) is a genuine rank/monotonic effect, not a linear one (Pearson partial on the same sample: −0.027, opposite sign) — a first attempt to locate that effect by quality bin used arithmetic means and wrongly concluded it was concentrated at the bottom of the range; a skew-robust (rank/median) reanalysis after that conclusion was directly challenged shows the opposite — a close-to-monotonic rise from score 2 through score 6 — and the mean-based conclusion was retracted. We cannot adjudicate H1 vs. H2 from this analysis; the mechanism is open. n=17, not decisive — see `AMENDMENTS.md` item 6 and `TECHNICAL_REPORT.md` §5.10 |
 

@@ -125,13 +125,13 @@ originally guessed at.
 
 **Later decision (see `EXPERIMENT_6.md`'s closing note):** shelve the
 experiment entirely rather than complete the reduced 3-level design. With
-Experiment 6 showing the underlying scoring-panel question already closed
-(gate 2 fails at the composite level regardless of vendor), the
-vendor-vs-effort question no longer bore on any product decision, and
-completing the reduced design was judged not worth its cost. A pilot run
-and one full-scale generation run were executed and are recorded in
-`results/experiment5_*`, but the design was not carried to a reported
-conclusion.
+Experiment 3 having already shown the underlying scoring-panel question
+closed (gate 2 fails at the composite level regardless of vendor — item 1
+above), the vendor-vs-effort question no longer bore on any product
+decision, and completing the reduced design was judged not worth its
+cost. A pilot run and one full-scale generation run were executed and are
+recorded in `results/experiment5_*`, but the design was not carried to a
+reported conclusion.
 
 ## 5. Experiment 4 (RAID): initially not planned, then run; its headline finding was not the one it was run to measure
 
@@ -180,9 +180,13 @@ negative, |ρ| > 0.5).
 
 **Results, reported plainly because they are mixed:**
 
-- The pre-registered **ordering held exactly**: frontier proprietary
-  (mean dispersion 1.845) < older proprietary (2.060) < open-weight
-  (2.421) < human (2.422).
+- The pre-registered **ordering held in point-estimate order**: frontier
+  proprietary (mean dispersion 1.845) < older proprietary (2.060) <
+  open-weight (2.421) < human (2.422) — though the last gap (0.0008) is
+  more than two orders of magnitude smaller than the other two and not
+  meaningfully non-zero; 3-of-3 clean plus one negligible tie is the more
+  accurate description than "held exactly" (see `TECHNICAL_REPORT.md`
+  §5.10, whose wording this entry has been aligned to).
 - The pre-registered **primary correlation did not clear its own bar**:
   dispersion vs TPR, ρ = −0.321 (bootstrap CI −0.738 to 0.253). Right
   direction, but the CI crosses zero and the magnitude falls short of the
@@ -340,9 +344,10 @@ negative, |ρ| > 0.5).
       was supposed to locate that concentration **was itself wrong on first
       report** — its mean-based visualization suggested a bottom-of-range
       effect that does not survive a skew-robust (rank/median) view. The
-      corrected view shows the effect rising close to monotonically from
-      score 2 through score 6, i.e. closer to a top-of-range effect than a
-      bottom-of-range one, with score 1 a mild, unresolved exception. This
+      corrected view shows the effect rising strictly monotonically from
+      score 2 through score 6 (matching `TECHNICAL_REPORT.md` §5.2's
+      wording), i.e. closer to a top-of-range effect than a bottom-of-range
+      one, with score 1 a mild, unresolved exception. This
       episode is logged in full, including the wrong first conclusion,
       because the error was in this study's own analysis, not in Gate 2 —
       exactly the kind of mistake this log exists to surface rather than

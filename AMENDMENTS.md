@@ -71,7 +71,7 @@ as if it were a pre-registered bar with statistical teeth.
 
 ## 3. ELLIPSE near-genre and ELL × genre compounding analyses added mid-study
 
-Not in the original plan or either `EXPERIMENT_*.md` design doc. Added
+Not in the original plan or any `EXPERIMENT_*.md` design doc. Added
 after Experiment 4 (RAID) showed severe far-genre FPR degradation (36.9% vs
 a 1% target), to bracket that number against a smaller "near genre" shift
 (`scripts/analyze_ellipse_neargenre.py`) and to test whether the ELL
@@ -189,7 +189,7 @@ negative, |ρ| > 0.5).
   |ρ| > 0.5 threshold set in advance. At n = 17 sources this is not strong
   evidence either way.
 - **Centroid distance from the human mean was the stronger predictor**:
-  ρ = 0.775 (CI 0.348 to 0.958) against TPR — sources farther from the
+  ρ = 0.775 (CI 0.348 to 0.957) against TPR — sources farther from the
   human centroid are more detectable, more confidently than the dispersion
   result above. A joint regression of TPR on both terms gets R² = 0.815
   (coef_dispersion = −0.107, coef_centroid_distance = +0.130).

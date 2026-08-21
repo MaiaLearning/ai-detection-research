@@ -24,9 +24,7 @@ At 1% FPR the detector achieves 41.3% true positive rate against 17 generator so
 
 ## 1. Introduction
 
-Detectors of machine-generated text are widely deployed in education, and their error properties are contested. Liang et al. (2023) found that perplexity-based detectors misclassify a majority of TOEFL essays by non-native writers as machine-generated while remaining near-perfect on essays by US-born eighth-graders, and attributed this to lower perplexity arising from reduced linguistic variability; the sample was 91 essays under 150 words each. Turnitin (2023) published a follow-up study testing its own detector, not among those Liang et al. evaluated, on a much larger sample of authentic student essays, and found no statistically significant ELL bias in its system.[^turnitin]
-
-[^turnitin]: An earlier draft of this paper attributed a stronger claim to Turnitin here — that it "disputed the methodology, citing short texts and small samples." That claim's provenance was traced and corrected before this paper was finalized; see `AMENDMENTS.md` for the full account.
+Detectors of machine-generated text are widely deployed in education, and their error properties are contested. Liang et al. (2023) found that perplexity-based detectors misclassify a majority of TOEFL essays by non-native writers as machine-generated while remaining near-perfect on essays by US-born eighth-graders, and attributed this to lower perplexity arising from reduced linguistic variability; the sample was 91 essays under 150 words each. Turnitin (2023) published a follow-up study testing its own detector, not among those Liang et al. evaluated, on a much larger sample of authentic student essays, and found no statistically significant ELL bias in its system.
 
 We approached the question as practitioners rather than as critics. MaiaLearning deployed an AI-detection panel in a commercial college-essay review product. A scheduled audit of that feature's *output appropriateness* — distinct from monitoring its performance — found that the guidance it issued to students appeared to advise writing badly. This paper is the investigation that followed, and the evidence on which the feature was withdrawn.
 
@@ -179,7 +177,7 @@ Against 17 generator sources: **AUC 0.945** [0.943, 0.947]. At the pre-registere
 
 We stress the gap between these figures. AUC is threshold-free and describes a paired ranking task; deployment requires a single-document decision at a fixed threshold. At an operating point strict enough to be ethically defensible, the majority of machine-generated essays are not detected.
 
-Ratio of the quality effect to the separation effect (2·AUC − 1 = 0.885): **0.152**.
+Ratio of the quality effect to the separation effect (2·AUC − 1 = 0.890): **0.152**.
 
 ### 5.4 Genre transfer
 
@@ -223,8 +221,8 @@ TPR at the 1% operating point, by generator:
 |---|---|
 | `gpt_5.6_terra_openai` (current frontier) | 78.1% |
 | `claude_sonnet_5_bedrock` (current frontier) | 73.6% |
-| DAIGT Claude vintages (Nov 2023) | 68.8%, 70.7% |
-| `chat_gpt_moth` | 42.2% |
+| DAIGT Claude vintages (Nov 2023) | 70.6%, 72.2% |
+| Older GPT vintages | `radekgpt4` 46.0%, `chat_gpt_moth` 42.1% |
 | Open-weight and older models | 14.9%–41.1% (lowest: `palm-text-bison1` 14.9%; also `kingki19_palm` 21.9%, `cohere-command` 25.4%, `NousResearch/Llama-2-7b-chat-hf` 29.0%, `llama2_chat` 29.4%, `llama_70b_v1` 29.5%, `mistral7binstruct_v2` 30.6%, `mistral7binstruct_v1` 35.8%, `falcon_180b_v1` 38.7%, `radek_500` 40.2%, `mistralai/Mistral-7B-Instruct-v0.1` 41.1%) |
 
 Current frontier models were the most detectable, contradicting an arms-race intuition and our own pre-registered expectation.
@@ -397,6 +395,8 @@ Hans, A., Schwarzschild, A., Cherepanova, V., Kazemi, H., Saha, A., Goldblum, M.
 Herbold, S., Hautli-Janisz, A., Heuer, U., Kikteva, Z., & Trautsch, A. (2023). AI, write an essay for me: A large-scale comparison of human-written versus ChatGPT-generated essays. arXiv:2304.14276.
 
 Liang, W., Yuksekgonul, M., Mao, Y., Wu, E., & Zou, J. (2023). GPT detectors are biased against non-native English writers. *Patterns*, 4(7), Article 100779. https://doi.org/10.1016/j.patter.2023.100779 (arXiv:2304.02819)
+
+Lu, N., Liu, S., He, R., & Tang, K. (2024). Large language models can be guided to evade AI-generated text detection. *Transactions on Machine Learning Research*. arXiv:2305.10847
 
 McCarthy, P. M., & Jarvis, S. (2010). MTLD, vocd-D, and HD-D: A validation study of sophisticated approaches to lexical diversity assessment. *Behavior Research Methods*, 42(2), 381–392. https://doi.org/10.3758/BRM.42.2.381
 

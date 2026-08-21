@@ -1,0 +1,18 @@
+{
+  "seed": 42,
+  "n_bootstrap": 1000,
+  "model": "llama-chat",
+  "pre_registration": "RESEARCH_PLAN.md Experiment 4: run the RAID adversarial subsets plus a manual light-edit condition (vary sentence lengths, add contractions). Not run when Experiment 4 was first reported; disclosed as dropped in AMENDMENTS.md, then run rather than left unrun -- this file is that run.",
+  "transformation": "src/light_edit.py::light_edit -- deterministic, no model, no randomness",
+  "tpr_before": 0.5233644859813084,
+  "tpr_after": 0.4953271028037383,
+  "tpr_delta_pts": -2.803738317757004,
+  "tpr_delta_ci_pts": [
+    -8.41121495327103,
+    3.738317757009341
+  ],
+  "mean_sentence_length_std_before": 6.829198227120304,
+  "mean_sentence_length_std_after": 8.05960577528851,
+  "single_model_limitation": "Same scope as scripts/experiment4_raid_robustness.py: llama-chat is the only AI model available in the persisted RAID subset for this domain/decoding/repetition-penalty filter.",
+  "comparison_to_paraphrase": "For context against results/experiment4_tpr_by_attack.csv: none (baseline) TPR is 0.523, paraphrase TPR is 0.308 (-21.5pts) for the same model. This light-edit figure is directly comparable -- same baseline documents, same frozen threshold."
+}

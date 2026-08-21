@@ -26,10 +26,10 @@ they weren't, and that document says so plainly.
 
 | Gate / experiment | Result |
 |---|---|
-| 1 — predicts ELL status? | PASS (composite AUC 0.60, all features < 0.65) |
+| 1 — predicts ELL status? | PASS (composite AUC 0.60, all features < 0.65). A pre-registered Tier-2 arm using a model-based detector (Binoculars, substituted small models) confirms this on the same matched sample: AUC 0.533, weaker than the Tier-1 composite — see `AMENDMENTS.md` item 8 |
 | 2 — anti-correlated with quality? | **FAIL** at the composite level (partial ρ = +0.135, CI excludes 0 — better essays score more AI-like) |
 | 3 — separates human/AI? | AUC 0.945, but only 41.3% TPR at a 1% FPR target; ELL FPR (1.56%) > non-ELL (0.94%) |
-| 4 — survives editing? | Paraphrase attack drops TPR ~21 points; two RAID attacks (homoglyph, zero-width space) break tokenization rather than demonstrating evasion |
+| 4 — survives editing? | Paraphrase attack drops TPR ~21 points; two RAID attacks (homoglyph, zero-width space) break tokenization rather than demonstrating evasion. A pre-registered manual light-edit condition (vary sentence length, add contractions) doesn't reliably lower AI TPR (Δ −2.8pp, CI crosses 0) but substantially lowers human FPR (Δ −16.8pp) — see `AMENDMENTS.md` item 8 |
 | Near/far genre transfer | FPR: 1% (PERSUADE) → 2.4–3.7% (ELLIPSE, near genre) → 36.9% (RAID abstracts, far genre) |
 | ELL × genre compounding | No compounding — the penalty tracks the writer rather than the prompt; broadening topic coverage does not close it. An abstain-band mitigation was not evaluated |
 | 6 — features carry quality above word count? | **NO for a linear model** — M1−M0 delta ρ = **−0.079** (CI −0.086 to **−0.072**), replicated on a held-out set. A pre-specified gradient-boosting secondary check recovers signal instead (R²=0.636, ρ=0.794, above the word-count-only baseline) — left unresolved for a non-linear approach; see `TECHNICAL_REPORT.md` §5.8 |
@@ -142,9 +142,13 @@ uv run python scripts/analyze_ell_genre_compounding.py    # -> results/ell_genre
 
 ```bash
 uv run python scripts/experiment1_ell_gate.py
+uv run python scripts/experiment1b_tier2_ell_gate.py        # Tier-2 Binoculars arm; needs a CUDA GPU (~10 min on a 6GB card), see AMENDMENTS.md item 8
 uv run python scripts/experiment2_quality_gate.py
 uv run python scripts/experiment3_separation.py            # also writes the frozen composite (see above)
+uv run python scripts/analyze_claude_task_split.py          # needs experiment3_ai_scores.csv above
 uv run python scripts/experiment4_raid_robustness.py       # streams RAID directly; ~5-8 min
+uv run python scripts/experiment4b_light_edit.py             # manual light-edit condition; needs the RAID subset and frozen composite above, see AMENDMENTS.md item 8
+uv run python scripts/analyze_raid_unicode_diagnostics.py   # needs data/raid_abstracts_subset.csv above
 uv run python scripts/analyze_ellipse_neargenre.py
 uv run python scripts/analyze_ell_genre_compounding.py     # also writes the diagnostic model (see above)
 uv run python scripts/experiment6_quality_composite.py
@@ -168,6 +172,8 @@ and produces real API spend; it does not bear on the study's conclusions.
 | Experiment 3 (fit + score) | free | ~1.5 minutes |
 | Bedrock + OpenAI generation (optional; already included) | ~$18 total | ~20-25 min each |
 | Experiment 4 (RAID streaming) | free | ~5-8 minutes |
+| Experiment 1b (Tier-2 Binoculars; needs a CUDA GPU) | free | ~10 minutes on a 6GB card |
+| Experiment 4b (manual light-edit condition) | free | ~1 minute |
 | ELLIPSE / compounding / experiment 6 analyses | free | a few minutes each |
 | Experiment 7 (dispersion, reuses experiment 3's output) | free | ~1 minute |
 

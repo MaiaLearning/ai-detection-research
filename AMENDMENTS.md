@@ -444,6 +444,92 @@ Errors and Fixes record for that incident) — a plausible-sounding claim
 that was never actually checked against a primary source. No claim about
 who-argued-what should ship in either document without this check.
 
+## 8. Two pre-registered arms, dropped without disclosure, then found, disclosed, and run
+
+While preparing this document for a completeness review, two components of
+`RESEARCH_PLAN.md`'s original pre-registration were found to have never been
+run, and never been logged anywhere as dropped — a gap in this log's own
+stated discipline ("This log records every consequential decision made or
+changed... it exists because several of these decisions are not otherwise
+recorded anywhere in the repository"). Both are now run; this entry records
+the omission and the results.
+
+**What was missed.** (a) Experiment 1's Tier-2 arm: the plan specifies
+computing Gate 1 (ELL predictability) with a model-based zero-shot detector,
+Binoculars, in addition to the Tier-1 deterministic features that shipped as
+the gate's sole basis. (b) Experiment 4's manual light-edit condition: the
+plan specifies running RAID's adversarial subsets "plus a manual light-edit
+condition (vary sentence lengths, add contractions) simulating a student who
+has been told what detectors look for" — only the RAID subsets were run and
+reported.
+
+**Why they were skipped without disclosure.** Best reconstruction: (a) was
+skipped because it required a GPU-based model pipeline that did not exist
+yet when Experiment 1 was first run, and no fallback plan (Fast-DetectGPT,
+per the plan's own "as a lighter alternative") was substituted or logged as
+a substitution. (b) was skipped because RAID's official attack list already
+gave twelve conditions, and the manual edit condition was, in retrospect,
+conflated with that coverage rather than recognised as a distinct
+pre-registered item. Neither is a defensible reason to omit a pre-registered
+test silently; both are logged here as process failures, not as considered
+scope decisions.
+
+**Given the choice to run them or leave them disclosed-but-dropped**, a
+probability estimate was made first, before committing GPU/analyst time:
+both were assessed as low-probability (under 10%) to change any of this
+study's existing conclusions, since neither tests the mechanism the shipped
+conclusions rest on — Gate 2's composite-level quality inversion (item 1)
+and the ELL penalty (§5.5) do not depend on Gate 1's Tier-1 arm being
+Binoculars-confirmed, and the light-edit condition tests evasion-under-
+editing, a question orthogonal to the quality-inversion and fairness
+findings that already close the scoring-panel question. Both were then run
+anyway, since both were pre-registered and GPU time was available locally
+(an RTX 3060 Laptop GPU, 6GB VRAM) — reporting a study as complete when two
+of its own pre-registered components were never run is a worse outcome than
+spending the (modest, ~25 minutes combined) compute to close the gap.
+
+**(a) Tier-2 Binoculars result** (`scripts/experiment1b_tier2_ell_gate.py`,
+`results/experiment1b_tier2_*`). The plan's default Falcon-7B observer/
+performer pair does not fit this machine's 6GB VRAM budget; substituted
+Qwen2.5-0.5B (observer, base) / Qwen2.5-0.5B-Instruct (performer,
+instruction-tuned) — a smaller pair from the same base/instruct family,
+which the plan explicitly permits ("Substitute smaller models if VRAM is
+tight and record which"). Scored on the exact same caliper-matched sample
+Tier-1's Gate 1 used (n = 1,810 pairs; caliper 0.15; see
+`results/experiment1_manifest.json`), with a single forward pass per essay
+(batching was attempted first at batch sizes up to 8 and reliably exhausted
+the card's VRAM — Qwen's ~152k-token vocabulary makes each position's
+logits and softmax buffers large relative to the models' own 0.5B-parameter
+size; single-essay scoring peaks at ~2.8GB, comfortably within budget).
+Result: **AUC against ELL status 0.533, 95% CI [0.515, 0.552]** — passes
+the 0.65 gate with room to spare, and is in fact *weaker* than the Tier-1
+composite's own 0.601 [0.583, 0.619]. The model-based arm does not
+overturn Gate 1; if anything it reinforces it.
+
+**(b) Manual light-edit result** (`scripts/experiment4b_light_edit.py`,
+`src/light_edit.py`, `results/experiment4b_light_edit*`). The edit itself is
+deterministic pure Python — merge every third sentence into the next with
+", and ", plus a fixed ~30-entry contraction map — not a paraphrase-tool
+rewrite. Applied to the same llama-chat/human RAID baseline pair Experiment
+4 already used (n = 107 AI, n = 493 human), scored with the same frozen
+composite and threshold. Result, reported plainly because it is asymmetric:
+AI TPR moves from 52.3% to 49.5% (Δ = −2.8 pts, 95% CI [−8.4, +3.7] — not
+distinguishable from no change), while human FPR drops from 36.9% to 20.1%
+(Δ = −16.8 pts, 95% CI [−20.5, −13.6] — large and clearly non-zero). The
+edit is not a reliable evasion technique for AI-generated text, but it is a
+substantial de-flagging technique for genuinely human text that happens to
+read uniformly — which is exactly the failure mode the plan's own framing
+warned about ("the panel predominantly catches honest students who happen
+to write uniformly"), now measured rather than merely anticipated.
+
+**Disposition.** Both results are now integrated into `TECHNICAL_REPORT.md`
+(§5.1 for the Tier-2 arm, §5.7 for the light-edit condition, and a
+qualifying paragraph added to §7.3 noting the asymmetry) and this log.
+Neither changes any existing gate verdict or headline conclusion, consistent
+with the pre-run probability estimate above — which is itself worth noting:
+the estimate was right, but it was made honestly before the results were
+known, not fitted to them afterward.
+
 ## On this repository's single commit
 
 This repository was pushed as a single commit imported from the working
